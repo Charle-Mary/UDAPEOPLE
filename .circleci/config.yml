@@ -1,6 +1,5 @@
 version: 2.1
 
-
 jobs:
   build-frontend:
     docker:
@@ -34,4 +33,5 @@ workflows:
   uda_people_workflow:
     jobs:
       - build-frontend
-      - build-backend
+      - build-backend:
+          requires: [build-frontend]
