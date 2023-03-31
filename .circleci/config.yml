@@ -10,7 +10,7 @@ jobs:
       - run: pwd
       - run: 
           name: Install front-end dependencies
-          command: npm install
+          command: npm --prefix ./frontend install
       - run:
           name: Build front-end
           command: npm --prefix ./frontend run build
