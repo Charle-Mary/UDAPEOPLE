@@ -4,16 +4,17 @@ jobs:
   build-frontend:
     docker:
       - image: circleci/node:13.8.0
+    working_directory: ~/frontend 
     steps:
       - checkout
       - run: cd frontend
       - run: pwd
       - run: 
           name: Install front-end dependencies
-          command: npm --prefix ./frontend install
+          command: npm install
       - run:
           name: Build front-end
-          command: npm --prefix ./frontend run build
+          command: npm run build
     
   build-backend:
     docker:
