@@ -7,6 +7,7 @@ jobs:
     steps:
       - checkout
       - run: cd frontend
+      - run: pwd
       - run: 
           name: Install front-end dependencies
           command: npm install
