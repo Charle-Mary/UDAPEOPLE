@@ -3,10 +3,10 @@ version: 2.1
 jobs:
   build-frontend:
     docker:
-      - image: circleci/node:13.8.0
-    working_directory: ~/frontend 
+      - image: circleci/node:13.8.0 
     steps:
-      - checkout
+      - checkout:
+          path: ./frontend
       - run: cd frontend
       - run: pwd
       - run: 
