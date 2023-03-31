@@ -1,0 +1,37 @@
+version: 2.1
+
+jobs:
+  build-frontend:
+    docker:
+      - image: circleci/node:13.8.0
+    steps:
+      - checkout
+      - run: cd frontend
+      - run: 
+          name: Install front-end dependencies
+          command: npm install
+      - run:
+          name: Build front-end
+          command: npm run build
+      - save_cache:
+          key: 
+    
+  build-backend:
+    docker:
+      - image: circleci/node:13.8.0
+    steps:
+      - checkout
+      - run: cd backend
+      - run:
+          name: Installl backend dependencies
+          command: npm install
+      - run:
+          name: Compile backend
+          command: npm run build
+
+
+workflows:
+  uda_people_workflow:
+    jobs:
+      - build-frontend
+      - build-backend
