@@ -2,11 +2,12 @@ version: 2.1
 
 jobs:
   build-frontend:
+    working_directory: ~/UDAPEOPLE/frontend 
     docker:
       - image: circleci/node:13.8.0
-    working_directory: ./frontend 
     steps:
-      - checkout
+      - checkout:
+          path: ~/UDAPEOPLE
       - run: pwd
       - run: 
           name: Install front-end dependencies
