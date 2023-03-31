@@ -13,7 +13,7 @@ jobs:
           command: npm install
       - run:
           name: Build front-end
-          command: npm run build
+          command: npm --prefix ./frontend run build
     
   build-backend:
     docker:
