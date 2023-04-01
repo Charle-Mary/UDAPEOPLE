@@ -16,7 +16,7 @@ jobs:
           name: Build front-end
           command: npm run build
       - save_cache:
-          path: [./node_modules]
+          paths: [./node_modules]
           key: frontend-build
     
   build-backend:
@@ -33,7 +33,7 @@ jobs:
           name: Compile backend
           command: npm run build
       - save_cache:
-          path: [./node_modules]
+          paths: [./node_modules]
           key: backend-build
 
 
