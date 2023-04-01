@@ -8,6 +8,8 @@ jobs:
     steps:
       - checkout:
           path: ~/UDAPEOPLE
+      - restore_cache:
+          key: frontend-build
       - run: pwd
       - run: 
           name: Install front-end dependencies
@@ -26,8 +28,10 @@ jobs:
     steps:
       - checkout:
           path: ~/UDAPEOPLE
+      - restore_cache:
+          backend-build
       - run:
-          name: Installl backend dependencies
+          name: Install backend dependencies
           command: npm install
       - run:
           name: Compile backend
