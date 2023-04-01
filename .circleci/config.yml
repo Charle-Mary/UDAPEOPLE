@@ -36,6 +36,9 @@ jobs:
       - install_dependencies:
           folder: frontend
       - run:
+          name: Fix package vulnerabilities
+          command: npm audit fix --audit-level=critical
+      - run:
           name: Build front-end
           command: npm run build
       - save_cache:
@@ -47,6 +50,9 @@ jobs:
     steps:
       - install_dependencies:
           folder: backend
+      - run:
+          name: Fix package vulnerabilities
+          command: npm audit fix --audit-level=critical
       - run:
           name: Compile backend
           command: npm run build
