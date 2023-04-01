@@ -15,6 +15,9 @@ jobs:
       - run:
           name: Build front-end
           command: npm run build
+      - save_cache:
+          path: [./node_modules]
+          key: frontend-build
     
   build-backend:
     docker:
@@ -23,13 +26,15 @@ jobs:
     steps:
       - checkout:
           path: ~/UDAPEOPLE
-      - run: cd backend
       - run:
           name: Installl backend dependencies
           command: npm install
       - run:
           name: Compile backend
           command: npm run build
+      - save_cache:
+          path: [./node_modules]
+          key: backend-build
 
 
 workflows:
