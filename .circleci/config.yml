@@ -45,5 +45,5 @@ workflows:
   uda_people_workflow:
     jobs:
       - build-frontend
-      - build-backend
+      - build-backend:
           requires: [build-frontend]
