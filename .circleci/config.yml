@@ -10,18 +10,31 @@ default_backend: &backend
   docker:
     - image: circleci/node:13.8.0
 
+
+commands:
+  install_dependencies:
+    parameters:
+      repo:
+        type: string
+        default: UDAPEOPLE
+      folder:
+        type: string
+    steps:
+      - checkout:
+          path: ~/<<parameters.repo>>
+      - restore_cache:
+          key: <<parameters.folder>>-build
+      - run:
+          name: Install <<parameters.folder>> dependencies
+          command: npm install
+
+
 jobs:
   build-frontend:
     <<: *frontend
     steps:
-      - checkout:
-          path: ~/UDAPEOPLE
-      - restore_cache:
-          key: frontend-build
-      - run: pwd
-      - run:
-          name: Install front-end dependencies
-          command: npm install
+      - install_dependencies:
+          folder: frontend
       - run:
           name: Build front-end
           command: npm run build
@@ -32,13 +45,8 @@ jobs:
   build-backend:
     <<: *backend
     steps:
-      - checkout:
-          path: ~/UDAPEOPLE
-      - restore_cache:
-          key: backend-build
-      - run:
-          name: Install backend dependencies
-          command: npm install
+      - install_dependencies:
+          folder: backend
       - run:
           name: Compile backend
           command: npm run build
@@ -49,13 +57,8 @@ jobs:
   test-frontend:
     <<: *frontend
     steps:
-      - checkout:
-          path: ~/UDAPEOPLE
-      - restore_cache:
-          key: frontend-build
-      - run: 
-          name: Install frontend dependencies
-          command: npm install
+      - install_dependencies:
+          folder: frontend
       - run: 
           name: Run frontend test scripts
           command: npm run test
@@ -63,13 +66,8 @@ jobs:
   test-backend:
     <<: *backend
     steps:
-      - checkout:
-          path: ~/UDAPEOPLE
-      - restore_cache:
-          key: backend-build
-      - run:
-          name: Install backend dependencies
-          command: npm install 
+      - install_dependencies:
+          folder: backend
       - run:
           name: Run test on backend
           command: npm run test
@@ -77,13 +75,8 @@ jobs:
   scan-frontend:
     <<: *frontend
     steps:
-      - checkout:
-          path: ~/UDAPEOPLE
-      - restore_cache:
-          key: frontend-build
-      - run:
-          name: Install frontend dependencies
-          command: npm install
+      - install_dependencies:
+          folder: frontend
       - run:
           name: Run audit on frontend
           command: npm audit --audit-level=critical
@@ -91,13 +84,8 @@ jobs:
   scan-backend:
     <<: *backend
     steps:
-      - checkout:
-          path: ~/UDAPEOPLE
-      - restore_cache:
-          key: backend-build
-      - run:
-          name: Install backend dependencies
-          command: npm install
+      - install_dependencies:
+          folder: backend
       - run:
           name: Run audit on backend
           command: npm audit --audit-level=critical
