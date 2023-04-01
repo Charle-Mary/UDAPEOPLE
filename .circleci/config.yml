@@ -1,10 +1,18 @@
 version: 2.1
 
+default_frontend: &frontend
+  working_directory: ~/UDAPEOPLE/frontend 
+  docker:
+    - image: circleci/node:13.8.0
+
+default_backend: &backend
+  working_directory: ~/UDAPEOPLE/backend
+  docker:
+    - image: circleci/node:13.8.0
+
 jobs:
   build-frontend:
-    working_directory: ~/UDAPEOPLE/frontend 
-    docker:
-      - image: circleci/node:13.8.0
+    <<: *frontend
     steps:
       - checkout:
           path: ~/UDAPEOPLE
@@ -22,9 +30,7 @@ jobs:
           key: frontend-build
     
   build-backend:
-    working_directory: ~/UDAPEOPLE/backend
-    docker:
-      - image: circleci/node:13.8.0
+    <<: *backend
     steps:
       - checkout:
           path: ~/UDAPEOPLE
@@ -41,9 +47,7 @@ jobs:
           key: backend-build
   
   test-frontend:
-    working_directory: ~/UDAPEOPLE/frontend
-    docker:
-      - image: circleci/node:13.8.0
+    <<: *frontend
     steps:
       - checkout:
           path: ~/UDAPEOPLE
@@ -57,9 +61,7 @@ jobs:
           command: npm run test
   
   test-backend:
-    working_directory: ~/UDAPEOPLE/backend
-    docker:
-      - image: circleci/node:13.8.0
+    <<: *backend
     steps:
       - checkout:
           path: ~/UDAPEOPLE
@@ -73,9 +75,7 @@ jobs:
           command: npm run test
 
   scan-frontend:
-    working_directory: ~/UDAPEOPLE/frontend
-    docker:
-      - image: circleci/node:13.8.0
+    <<: *frontend
     steps:
       - checkout:
           path: ~/UDAPEOPLE
@@ -89,9 +89,7 @@ jobs:
           command: npm audit --audit-level=critical
   
   scan-backend:
-    working_directory: ~/UDAPEOPLE/backend
-    docker:
-      - image: circleci/node:13.8.0
+    <<: *backend
     steps:
       - checkout:
           path: ~/UDAPEOPLE
