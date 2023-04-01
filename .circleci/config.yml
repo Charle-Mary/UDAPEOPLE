@@ -20,9 +20,9 @@ jobs:
           key: frontend-build
     
   build-backend:
+    working_directory: ~/UDAPEOPLE/backend
     docker:
       - image: circleci/node:13.8.0
-    working_directory: ~/UDAPEOPLE/backend
     steps:
       - checkout:
           path: ~/UDAPEOPLE
