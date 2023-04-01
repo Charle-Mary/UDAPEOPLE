@@ -19,8 +19,10 @@ jobs:
   build-backend:
     docker:
       - image: circleci/node:13.8.0
+    working_directory: ~/UDAPEOPLE/backend
     steps:
-      - checkout
+      - checkout:
+          path: ~/UDAPEOPLE
       - run: cd backend
       - run:
           name: Installl backend dependencies
