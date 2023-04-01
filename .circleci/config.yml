@@ -72,6 +72,38 @@ jobs:
           name: Run test on backend
           command: npm run test
 
+  scan-frontend:
+    working_directory: ~/UDAPEOPLE/frontend
+    docker:
+      - image: circleci/node:13.8.0
+    steps:
+      - checkout:
+          path: ~/UDAPEOPLE
+      - restore_cache:
+          key: frontend-build
+      - run:
+          name: Install frontend dependencies
+          command: npm install
+      - run:
+          name: Run audit on frontend
+          command: npm audit --audit-level=critical
+  
+  scan-backend:
+    working_directory: ~/UDAPEOPLE/backend
+    docker:
+      - image: circleci/node:13.8.0
+    steps:
+      - checkout:
+          path: ~/UDAPEOPLE
+      - restore_cache:
+          key: backend-build
+      - run:
+          name: Install backend dependencies
+          command: npm install
+      - run:
+          name: Run audit on backend
+          command: npm audit --audit-level=critical
+
 workflows:
   uda_people_workflow:
     jobs:
@@ -80,4 +112,8 @@ workflows:
       - test-frontend:
           requires: [build-frontend]
       - test-backend:
+          requires: [build-backend]
+      - scan-frontend:
+          requires: [build-frontend]
+      - scan-backend: 
           requires: [build-backend]
