@@ -92,6 +92,9 @@ jobs:
     steps:
       - install_dependencies:
           folder: backend
+      - run: 
+          name: Check for updated dependencies
+          command: cat package.json | grep "class*"
       - run:
           name: Run audit on backend
           command: npm audit --audit-level=critical
