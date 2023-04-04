@@ -84,7 +84,7 @@ jobs:
       - install_dependencies:
           folder: frontend
       - run:
-          name: Run audit on frontend
+          name: Run audit on frontend.
           command: npm audit --audit-level=critical
   
   scan-backend:
