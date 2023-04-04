@@ -95,6 +95,9 @@ jobs:
       - run: 
           name: Check for updated dependencies
           command: cat package.json | grep "class*"
+      - run: 
+          name: node version
+          command: node --version && npm --version
       - run:
           name: Run audit on backend
           command: npm audit --audit-level=critical
