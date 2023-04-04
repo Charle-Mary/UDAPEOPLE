@@ -35,9 +35,9 @@ jobs:
     steps:
       - install_dependencies:
           folder: frontend
-      # - run:
-      #     name: Fix package vulnerabilities
-      #     command: npm audit fix --force
+      - run:
+          name: Fix package vulnerabilities
+          command: npm audit fix --force
       - run:
           name: Build front-end
           command: npm run build
@@ -50,9 +50,9 @@ jobs:
     steps:
       - install_dependencies:
           folder: backend
-      # - run:
-      #     name: Fix package vulnerabilities
-      #     command: npm audit fix --force
+      - run:
+          name: Fix package vulnerabilities
+          command: npm audit fix --force
       - run:
           name: Compile backend
           command: npm run build
