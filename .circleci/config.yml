@@ -3,12 +3,12 @@ version: 2.1
 default_frontend: &frontend
   working_directory: ~/UDAPEOPLE/frontend 
   docker:
-    - image: circleci/node:18.14.0
+    - image: cimg/node:18.14.0
 
 default_backend: &backend
   working_directory: ~/UDAPEOPLE/backend
   docker:
-    - image: circleci/node:18.14.0
+    - image: cimg/node:18.14.0
 
 
 commands:
