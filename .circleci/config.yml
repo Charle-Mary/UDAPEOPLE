@@ -1,5 +1,8 @@
 version: 2.1
 
+orbs:
+  slack: circleci/slack@4.12.1
+
 default_frontend: &frontend
   working_directory: ~/UDAPEOPLE/frontend 
   docker:
@@ -92,10 +95,14 @@ jobs:
       - run: 
           name: Fix package vulnerabilities
           command: npm update && npm audit fix --audit-level=critical --force
-      - run: npm update mkdirp --depth 2
+      #- run: npm update mkdirp --depth 2
       - run:
           name: Run audit on backend
           command: npm audit --audit-level=critical
+      - slack/notify:
+          event: fail
+          template: basic_fail_1
+
 
 workflows:
   uda_people_workflow:
