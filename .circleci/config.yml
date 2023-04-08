@@ -6,7 +6,7 @@ orbs:
 default_frontend: &frontend
   working_directory: ~/UDAPEOPLE/frontend 
   docker:
-    - image: circleci/node:13.8.0
+    - image: cimg/node:19.8.1
 
 default_backend: &backend
   working_directory: ~/UDAPEOPLE/backend
