@@ -6,7 +6,7 @@ orbs:
 default_frontend: &frontend
   working_directory: ~/UDAPEOPLE/frontend 
   docker:
-    - image: cimg/node:19.8.1
+    - image: circleci/node:13.8.0
 
 default_backend: &backend
   working_directory: ~/UDAPEOPLE/backend
@@ -97,7 +97,7 @@ jobs:
       - run: 
           name: Fix package vulnerabilities
           command: npm update && npm audit fix --audit-level=critical --force
-      #- run: npm update mkdirp --depth 2
+      - run: npm update mkdirp --depth 2
       - run:
           name: Run audit on backend
           command: npm audit --audit-level=critical
