@@ -103,6 +103,7 @@ jobs:
           name: Run audit on backend
           command: npm audit --audit-level=critical
       - slack/notify:
+          channel: project
           event: fail
           template: basic_fail_1
   
@@ -120,16 +121,16 @@ jobs:
 workflows:
   uda_people_workflow:
     jobs:
-      # - build-frontend
-      # - build-backend
-      - test:
-          context: uda-context
-      # - test-frontend:
-      #     requires: [build-frontend]
-      # - test-backend:
-      #     requires: [build-backend]
-      # - scan-frontend:
-      #     requires: [build-frontend]
-      # - scan-backend: 
-      #     requires: [build-backend]
+      - build-frontend
+      - build-backend
+      # - test:
       #     context: uda-context
+      - test-frontend:
+          requires: [build-frontend]
+      - test-backend:
+          requires: [build-backend]
+      - scan-frontend:
+          requires: [build-frontend]
+      - scan-backend: 
+          requires: [build-backend]
+          context: uda-context
