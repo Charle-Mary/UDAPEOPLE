@@ -2,7 +2,7 @@ version: 2.1
 
 orbs:
   slack: circleci/slack@4.12.1
-  node: circleci/node:13.8.0
+  node: circleci/node@5.1.0
 
 default_frontend: &frontend
   working_directory: ~/UDAPEOPLE/frontend 
