@@ -92,12 +92,13 @@ jobs:
     steps:
       - install_dependencies:
           folder: backend
+      - run: echo $SLACK_DEFAULT_CHANNEL
+      - run: echo $SLACK_ACCESS_TOKEN
+      - run: echo $SLACK_ACCESS_KEY
       - run: 
           name: Fix package vulnerabilities
           command: npm update && npm audit fix --audit-level=critical --force
       #- run: npm update mkdirp --depth 2
-      - run: echo $SLACK_DEFAULT_CHANNEL
-      - run: echo $SLACK_ACCESS_TOKEN
       - run:
           name: Run audit on backend
           command: npm audit --audit-level=critical
