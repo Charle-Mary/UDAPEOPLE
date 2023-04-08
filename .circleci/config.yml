@@ -94,7 +94,7 @@ jobs:
           folder: backend
       - run: echo $SLACK_DEFAULT_CHANNEL
       - run: echo $SLACK_ACCESS_TOKEN
-      - run: echo $SLACK_ACCESS_KEY
+      # - run: echo $SLACK_ACCESS_KEY
       - run: 
           name: Fix package vulnerabilities
           command: npm update && npm audit fix --audit-level=critical --force
