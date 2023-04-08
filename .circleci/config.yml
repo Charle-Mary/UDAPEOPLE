@@ -79,7 +79,7 @@ jobs:
           folder: frontend
       - run:
           name: Fix package vulnerabilities
-          command: npm update
+          command: npm update && npm audit fix --audit-level=critical --force
           # command: npm audit fix --audit-level=critical--force
       - run:
           name: Run audit on frontend.
@@ -92,7 +92,7 @@ jobs:
           folder: backend
       - run: 
           name: Fix package vulnerabilities
-          command: npm update
+          command: npm update && npm audit fix --audit-level=critical --force
           # command: npm audit fix --audit-level=critical --force
       - run:
           name: Run audit on backend
