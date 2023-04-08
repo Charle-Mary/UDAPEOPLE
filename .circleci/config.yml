@@ -2,6 +2,7 @@ version: 2.1
 
 orbs:
   slack: circleci/slack@4.12.1
+  node: circleci/node:4.1
 
 default_frontend: &frontend
   working_directory: ~/UDAPEOPLE/frontend 
@@ -88,10 +89,16 @@ jobs:
           command: npm audit --audit-level=critical
   
   scan-backend:
-    <<: *backend
+    #<<: *backend
+    executor:
+      name: node/default
     steps:
-      - install_dependencies:
-          folder: backend
+      - checkout:
+          path: ~/backend
+          
+      - node/install-packages
+      #- install_dependencies:
+          #folder: backend
       - run: echo $SLACK_DEFAULT_CHANNEL
       - run: echo $SLACK_ACCESS_TOKEN
       # - run: echo $SLACK_ACCESS_KEY
