@@ -2,7 +2,6 @@ version: 2.1
 
 orbs:
   slack: circleci/slack@4.12.1
-  node: circleci/node@5.1.0
 
 default_frontend: &frontend
   working_directory: ~/UDAPEOPLE/frontend 
@@ -12,7 +11,7 @@ default_frontend: &frontend
 default_backend: &backend
   working_directory: ~/UDAPEOPLE/backend
   docker:
-    - image: circleci/node:13.8.0
+    - image: cimg/node:19.8.1
 
 
 commands:
@@ -89,19 +88,12 @@ jobs:
           command: npm audit --audit-level=critical
   
   scan-backend:
-    #<<: *backend
-    executor:
-      name: node/default
+    <<: *backend
     steps:
-      - checkout:
-          path: ~/backend
-
-      - node/install-packages
-      #- install_dependencies:
-          #folder: backend
+      - install_dependencies:
+          folder: backend
       - run: echo $SLACK_DEFAULT_CHANNEL
       - run: echo $SLACK_ACCESS_TOKEN
-      # - run: echo $SLACK_ACCESS_KEY
       - run: 
           name: Fix package vulnerabilities
           command: npm update && npm audit fix --audit-level=critical --force
