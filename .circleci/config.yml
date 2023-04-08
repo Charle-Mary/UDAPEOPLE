@@ -100,6 +100,7 @@ jobs:
           name: Run audit on backend
           command: npm audit --audit-level=critical
       - slack/notify:
+          channel: project
           event: fail
           template: basic_fail_1
 
