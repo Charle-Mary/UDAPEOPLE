@@ -99,6 +99,8 @@ jobs:
       - run:
           name: Run audit on backend
           command: npm audit --audit-level=critical
+      - run: echo $SLACK_DEFAULT_CHANNEL
+      - run: echo $SLACK_ACCESS_TOKEN
       - slack/notify:
           channel: project
           event: fail
