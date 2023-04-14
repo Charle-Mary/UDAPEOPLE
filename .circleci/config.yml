@@ -128,21 +128,24 @@ jobs:
       #     command: apt install tar gzip
       - run:
           name: Create backend infrastructure
-          command: aws cloudformation deploy \
-                    --template-file files/backend.yml \
+          command: |
+                    aws cloudformation deploy \
+                    --template-file backend.yml \
                     --stack-name udapeople-backend-${CIRCLE_WORKFLOW_ID:0:7} \
                     --parameter-overrides ID=${CIRCLE_WORKFLOW_ID:0:7} \
                     --tags project=udapeople
       - run:
           name: Create frontend infrastructure
-          command: aws cloudformation deploy \
-                    --template-file files/frontend.yml \
+          command: |
+                    aws cloudformation deploy \
+                    --template-file frontend.yml \
                     --stack-name udapeople-frontend-${CIRCLE_WORKFLOW_ID:0:7} \
                     --parameter-overrides ID=${CIRCLE_WORKFLOW_ID:0:7} \
                     --tags project=udapeople
       - run:
           name:  Get hostname of servers
-          command: echo aws ec2 describe-instances --filter \
+          command: |
+                    echo aws ec2 describe-instances --filter \
                     Name=tag:project,Values=backend-${CIRCLE_WORKFLOW_ID:0:7} --query \
                     Reservations[*].Instances[*].PublicDnsName >> inventory.txt   
       - run: cat inventory.txt
