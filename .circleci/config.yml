@@ -119,7 +119,7 @@ jobs:
   deploy-infrastructure:
     working_directory: ~/UDAPEOPLE/.circleci
     docker:
-      image: amazon/aws-cli
+      - image: amazon/aws-cli
     steps:
       - checkout:
           path: ~/UDAPEOPLE
