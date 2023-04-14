@@ -146,8 +146,10 @@ jobs:
           name:  Get hostname of servers
           command: |
                     aws ec2 describe-instances --filters \
-                    Name=tag:project,Values=backend-${CIRCLE_WORKFLOW_ID:0:7} --query \
-                    Reservations[*].Instances[*].PublicDnsName  
+                    Name=tag:project,Values=udapeople --query \
+                    Reservations[*].Instances[*].PublicDnsName --output \
+                    text >> ansible/inventory.txt
+                      
       - run: cat inventory.txt
 
 
