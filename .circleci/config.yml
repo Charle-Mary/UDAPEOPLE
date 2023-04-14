@@ -150,7 +150,7 @@ jobs:
                     Reservations[*].Instances[*].PublicDnsName --output \
                     text >> ansible/inventory.txt
                       
-      - run: cat inventory.txt
+      - run: cat ansible/inventory.txt
 
 
 workflows:
