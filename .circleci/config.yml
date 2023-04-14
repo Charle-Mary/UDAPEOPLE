@@ -123,9 +123,9 @@ jobs:
     steps:
       - checkout:
           path: ~/UDAPEOPLE
-      - run:
-          name: Install tar and gzip
-          command: apt install tar gzip
+      # - run:
+      #     name: Install tar and gzip
+      #     command: apt install tar gzip
       - run:
           name: Create backend infrastructure
           command: aws cloudformation deploy \
