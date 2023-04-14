@@ -150,7 +150,10 @@ jobs:
                     Reservations[*].Instances[*].PublicDnsName --output \
                     text >> ansible/inventory.txt
                       
-      - run: cat ansible/inventory.txt
+      - persist_to_workspace:
+          root: /tmp/
+          paths:
+            - inventory.txt
 
 
 workflows:
