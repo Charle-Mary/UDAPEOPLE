@@ -148,7 +148,7 @@ jobs:
                     text >> ansible/inventory.txt    
       - run: yum install -y tar gzip     
       - persist_to_workspace:
-          root: /tmp/
+          root: .
           paths:
             - ansible/inventory.txt
 
