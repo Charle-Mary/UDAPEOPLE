@@ -1,0 +1,21 @@
+---
+
+- name: Update dependencies
+  become: true
+  apt:
+    update_cache: yes
+
+- name: Upgrade dependencies
+  become: true
+  apt:
+    update: yes
+
+- name: Install Python
+  become: true
+  apt:
+    name: python3
+
+- name: Install nodejs
+  become: true
+  apt:
+    name: nodejs

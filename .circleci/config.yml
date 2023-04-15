@@ -155,27 +155,20 @@ jobs:
             - inventory.txt
 
   configure-infrastructure:
-    machine:
-      image: ubuntu-2004:current
-      resource_class: medium
+    working-directory: ~/UDAPEOPLE/.circleci/ansible
+    docker:
+      image: ansible/ansible
     steps:
-      - checkout
+      - checkout:
+          path: ~/UDAPEOPLE
       - add_ssh_keys:
           fingerprints:
             - 89:f0:76:7a:9b:b1:e8:84:ba:62:36:0e:8e:e3:5c:4a
       - attach_workspace:
           at: /tmp/
       - run:
-          name: Install dependencies
-          command: |
-                  sudo apt-get install unzip curl
-                  sudo apt-add-repository ppa:ansible/ansible
-                  sudo apt install ansible
-                  ansible --version
-                  # curl "https://awscli.amazonaws.com/awscli-exe-linux-x86_64.zip" -o "awscliv2.zip"
-                  # unzip awscliv2.zip
-                  # sudo ./aws/install
-                  aws --version
+          name: Configure backend server
+          command: ansible-playbook -i inventory.txt configure-server.yml
 
 
 
@@ -195,8 +188,8 @@ workflows:
       # - scan-backend: 
       #     requires: [build-backend]
       #     context: uda-context
-      # - deploy-infrastructure:
-      #     context: uda-context
+      - deploy-infrastructure:
+          context: uda-context
           #requires: [scan-frontend, scan-backend]
       - configure-infrastructure:
           context: uda-context
