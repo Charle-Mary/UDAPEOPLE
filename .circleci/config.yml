@@ -123,9 +123,6 @@ jobs:
     steps:
       - checkout:
           path: ~/UDAPEOPLE
-      # - run:
-      #     name: Install tar and gzip
-      #     command: apt install tar gzip
       - run:
           name: Create backend infrastructure
           command: |
@@ -148,11 +145,13 @@ jobs:
                     aws ec2 describe-instances --filters \
                     Name=tag:project,Values=udapeople --query \
                     Reservations[*].Instances[*].PublicDnsName --output \
-                    text >> ansible/inventory.txt         
+                    text >> ansible/inventory.txt    
+      - run: yum install -y tar gzip     
       - persist_to_workspace:
           root: /tmp/
           paths:
             - inventory.txt
+
 
   configure-infrastructure:
     working_directory: ~/UDAPEOPLE/.circleci/ansible
