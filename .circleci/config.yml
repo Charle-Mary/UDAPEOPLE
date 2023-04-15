@@ -156,7 +156,7 @@ jobs:
   configure-infrastructure:
     working_directory: ~/UDAPEOPLE/.circleci/ansible
     docker:
-      - image: ansible/ansible
+      - image: python:3.7-alpine3.11
     steps:
       - checkout:
           path: ~/UDAPEOPLE
@@ -164,7 +164,12 @@ jobs:
           fingerprints:
             - 89:f0:76:7a:9b:b1:e8:84:ba:62:36:0e:8e:e3:5c:4a
       - attach_workspace:
-          at: /tmp/
+          at: .
+      - run:
+          name: Install ansible
+          command: |
+                  apk update
+                  apk add ansible
       - run:
           name: Configure backend server
           command: ansible-playbook -i inventory.txt configure-server.yml
