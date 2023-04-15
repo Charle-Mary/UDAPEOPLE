@@ -168,7 +168,7 @@ jobs:
       - run:
           name: Install dependencies
           command: |
-                  sudo apt-get unzip curl
+                  sudo apt-get install unzip curl
                   sudo apt-add-repository ppa:ansible/ansible
                   sudo apt install ansible
                   ansible --version
