@@ -155,7 +155,7 @@ jobs:
             - inventory.txt
 
   configure-infrastructure:
-    working-directory: ~/UDAPEOPLE/.circleci/ansible
+    working_directory: ~/UDAPEOPLE/.circleci/ansible
     docker:
       image: ansible/ansible
     steps:
