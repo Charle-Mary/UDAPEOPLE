@@ -154,7 +154,7 @@ jobs:
           paths:
             - inventory.txt
 
-  configure_infrastructure:
+  configure-infrastructure:
     machine:
       image: ubuntu-2004:current
       resource_class: medium
