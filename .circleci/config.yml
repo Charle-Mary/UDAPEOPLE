@@ -157,7 +157,7 @@ jobs:
   configure-infrastructure:
     working_directory: ~/UDAPEOPLE/.circleci/ansible
     docker:
-      image: ansible/ansible
+      - image: ansible/ansible
     steps:
       - checkout:
           path: ~/UDAPEOPLE
