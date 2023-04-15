@@ -148,12 +148,38 @@ jobs:
                     aws ec2 describe-instances --filters \
                     Name=tag:project,Values=udapeople --query \
                     Reservations[*].Instances[*].PublicDnsName --output \
-                    text >> ansible/inventory.txt
-                      
+                    text >> ansible/inventory.txt         
       - persist_to_workspace:
           root: /tmp/
           paths:
             - inventory.txt
+
+  configure_infrastructure:
+    machine:
+      image: ubuntu-2004:current
+      resource_class: medium
+    steps:
+      - checkout
+      - add_ssh_keys:
+          fingerprints:
+            - 89:f0:76:7a:9b:b1:e8:84:ba:62:36:0e:8e:e3:5c:4a
+      - attach_workspace:
+          at: /tmp/
+      - run:
+          name: Install dependencies
+          command: |
+                  sudo apt-get update && sudo apt-get upgrade
+                  sudo apt-add-repository ppa:ansible/ansible
+                  sudo apt install ansible
+                  ansible --version
+                  sudo apt-get tar unzip curl
+                  curl "https://awscli.amazonaws.com/awscli-exe-linux-x86_64.zip" -o "awscliv2.zip"
+                  unzip awscliv2.zip
+                  sudo ./aws/install
+                  aws --version
+
+
+
 
 
 workflows:
@@ -170,7 +196,9 @@ workflows:
       # - scan-backend: 
       #     requires: [build-backend]
       #     context: uda-context
-      - deploy-infrastructure:
-          context: uda-context
+      # - deploy-infrastructure:
+      #     context: uda-context
           #requires: [scan-frontend, scan-backend]
+      - configure-infrastructure:
+          context: uda-context
           
