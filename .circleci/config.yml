@@ -150,7 +150,7 @@ jobs:
       - persist_to_workspace:
           root: /tmp/
           paths:
-            - inventory.txt
+            - ansible/inventory.txt
 
 
   configure-infrastructure:
