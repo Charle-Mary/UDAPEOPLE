@@ -33,13 +33,15 @@ commands:
   
   destroy_environment:
     parameters:
-      stack-name:
+      workflow_id:
         type: string
     steps:
       - run:
           name: destroy environments
-          command: aws cloudformation delete-stack \
-                    --stack-name <<parameters.stack-name>>
+          when: on_fail
+          command: |
+                  aws cloudformation delete-stack --stack-name udapeople-frontend-<<parameters.workflow_id>>
+                  aws cloudformation delete-stack --stack-name udapeople-backend-<<parameters.workflow_id>>
 
 
 jobs:
@@ -173,7 +175,7 @@ jobs:
       - run: cat ansible/inventory.txt
       - run:
           name: Configure backend server
-          command: ansible-playbook -i inventory.txt configure-server.yml
+          command: ansible-playbook -i ansible/inventory.txt configure-server.yml
 
 
 
