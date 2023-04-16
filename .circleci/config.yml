@@ -174,7 +174,7 @@ jobs:
           command: |
                   apk update
                   apk add ansible
-                  apk add --no-cache aws-cli
+                  apk add aws-cli
       - run: cat ansible/inventory.txt
       - run:
           name: Configure backend server
