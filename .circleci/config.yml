@@ -175,7 +175,7 @@ jobs:
                   apk update
                   apk add ansible
                   ansible --version
-      - run: cat ansible/inventory.txt
+      - run: cat /usr/local/ansible/inventory.txt
       - run:
           name: Configure backend server
           command: ansible-playbook -i /usr/local/ansible/inventory.txt configure-server.yml
