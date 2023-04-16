@@ -147,7 +147,7 @@ jobs:
           command: |
                     aws ec2 describe-instances --filters \
                     Name=tag:project,Values=udapeople --query \
-                    Reservations[*].Instances[*].PublicDnsName --output \
+                    Reservations[*].Instances[*].PublicIpAddress --output \
                     text >> ansible/inventory.txt    
       - run: yum install -y tar gzip     
       - persist_to_workspace:
@@ -166,8 +166,7 @@ jobs:
       - checkout:
           path: ~/UDAPEOPLE
       - add_ssh_keys:
-          fingerprints:
-            - 89:f0:76:7a:9b:b1:e8:84:ba:62:36:0e:8e:e3:5c:4a
+          fingerprints: [89:f0:76:7a:9b:b1:e8:84:ba:62:36:0e:8e:e3:5c:4a]
       - attach_workspace:
           at: .
       - run:
@@ -176,7 +175,6 @@ jobs:
                   apk update
                   apk add ansible
                   ansible --version
-                  ansible-config dump --only-changed
       - run: cat ansible/inventory.txt
       - run:
           name: Configure backend server
