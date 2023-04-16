@@ -173,8 +173,10 @@ jobs:
           name: Install ansible
           command: |
                   apk update
-                  apk add ansible
-                  apk add aws-cli
+                  apk add ansible curl unzip
+                  curl "https://awscli.amazonaws.com/awscli-exe-linux-x86_64.zip" -o "awscliv2.zip"
+                  unzip awscliv2.zip
+                  ./aws/install
       - run: cat ansible/inventory.txt
       - run:
           name: Configure backend server
