@@ -2,6 +2,7 @@ version: 2.1
 
 orbs:
   slack: circleci/slack@4.12.1
+  aws: circleci/aws-cli@3.1.5
 
 default_frontend: &frontend
   working_directory: ~/UDAPEOPLE/frontend 
@@ -161,7 +162,6 @@ jobs:
     working_directory: ~/UDAPEOPLE/.circleci/ansible
     docker:
       - image: python:3.7-alpine3.11
-      - image: amazon/aws-cli
     steps:
       - checkout:
           path: ~/UDAPEOPLE
@@ -179,6 +179,8 @@ jobs:
       - run:
           name: Configure backend server
           command: ansible-playbook -i ansible/inventory.txt configure-server.yml
+      - aws/setup:
+          profile: default
       - destroy_environment:
           workflow_id: ${CIRCLE_WORKFLOW_ID:0:7}
 
