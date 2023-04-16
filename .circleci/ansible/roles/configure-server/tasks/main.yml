@@ -8,7 +8,7 @@
 - name: Upgrade dependencies
   become: true
   apt:
-    update: yes
+    upgrade: yes
 
 - name: Install Python
   become: true
