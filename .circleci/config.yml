@@ -161,6 +161,7 @@ jobs:
     working_directory: ~/UDAPEOPLE/.circleci/ansible
     docker:
       - image: python:3.7-alpine3.11
+      - image: amazon/aws-cli
     steps:
       - checkout:
           path: ~/UDAPEOPLE
@@ -173,10 +174,7 @@ jobs:
           name: Install ansible
           command: |
                   apk update
-                  apk add ansible curl unzip
-                  curl "https://awscli.amazonaws.com/awscli-exe-linux-x86_64.zip" -o "awscliv2.zip"
-                  unzip awscliv2.zip
-                  ./aws/install -i /usr/local/aws-cli -b /usr/local/bin
+                  apk add ansible
       - run: cat ansible/inventory.txt
       - run:
           name: Configure backend server
