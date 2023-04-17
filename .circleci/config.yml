@@ -177,7 +177,7 @@ jobs:
       - checkout:
           path: ~/UDAPEOPLE
       - add_ssh_keys:
-          fingerprints: [89:f0:76:7a:9b:b1:e8:84:ba:62:36:0e:8e:e3:5c:4a]
+          fingerprints: ["89:f0:76:7a:9b:b1:e8:84:ba:62:36:0e:8e:e3:5c:4a"]
       - attach_workspace:
           at: ./ansible
       - run:
