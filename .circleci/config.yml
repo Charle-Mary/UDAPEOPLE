@@ -183,9 +183,13 @@ jobs:
       - run:
           name: Install ansible
           command: |
-                  apk update
-                  apk add ansible
+                  # apk update
+                  # apk add ansible
+                  # ansible --version
+                  apt-get update -y
+                  apt install ansible
                   ansible --version
+                  which ansible
       - run: cat ansible/inventory.txt
       - run:
           name: Configure backend server
