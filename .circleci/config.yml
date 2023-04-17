@@ -131,131 +131,65 @@ jobs:
           template: basic_fail_1
   
   deploy-infrastructure:
-    executor: aws
+    working_directory: ~/UDAPEOPLE/.circleci
+    docker:
+      - image: amazon/aws-cli
     steps:
-      - checkout
+      - checkout:
+          path: ~/UDAPEOPLE
       - run:
           name: Create backend infrastructure
-          working_directory: ./.circleci/files
           command: |
-            aws cloudformation deploy \
-              --template-file backend.yml \
-              --stack-name udapeople-backend-${CIRCLE_WORKFLOW_ID:0:7} \
-              --parameter-overrides ID="${CIRCLE_WORKFLOW_ID:0:7}" \
-              --region us-west-2 \
-              --tags project=udapeople-backend-${CIRCLE_WORKFLOW_ID:0:7}
-      - run:
-          name: Save backend ip and url
-          working_directory: ./.circleci/ansible
-          command: |
-            BACKEND_IP=$(aws ec2 describe-instances \
-              --filters "Name=tag:project,Values=udapeople-backend-${CIRCLE_WORKFLOW_ID:0:7}" \
-              --query 'Reservations[*].Instances[*].PublicIpAddress' \
-              --output text)
-            echo [web]$'\n'$BACKEND_IP > inventory.txt
-            echo http://$BACKEND_IP:3030 > backend-url.txt
-            cat inventory.txt
-            cat backend-url.txt
+                    aws cloudformation deploy \
+                    --template-file files/backend.yml \
+                    --stack-name udapeople-backend-${CIRCLE_WORKFLOW_ID:0:7} \
+                    --parameter-overrides ID=${CIRCLE_WORKFLOW_ID:0:7} \
+                    --tags project=udapeople
       - run:
           name: Create frontend infrastructure
-          working_directory: ./.circleci/files
           command: |
-            aws cloudformation deploy \
-              --template-file frontend.yml \
-              --stack-name udapeople-frontend-${CIRCLE_WORKFLOW_ID:0:7} \
-              --parameter-overrides ID=${CIRCLE_WORKFLOW_ID:0:7} \
-              --region us-west-2 \
-              --tags project=udapeople
-            echo "created bucket udapeople-${CIRCLE_WORKFLOW_ID:0:7}"
-      - run: yum install -y tar gzip
+                    aws cloudformation deploy \
+                    --template-file files/frontend.yml \
+                    --stack-name udapeople-frontend-${CIRCLE_WORKFLOW_ID:0:7} \
+                    --parameter-overrides ID=${CIRCLE_WORKFLOW_ID:0:7} \
+                    --tags project=udapeople
+      - run:
+          name:  Get hostname of servers
+          command: |
+                    aws ec2 describe-instances --filters \
+                    Name=tag:project,Values=udapeople --query \
+                    Reservations[*].Instances[*].PublicIpAddress --output \
+                    text >> ansible/inventory.txt    
+      - run: yum install -y tar gzip     
       - persist_to_workspace:
-          root: .
+          root: ./ansible
           paths:
-            - .circleci/ansible/inventory.txt
-            - .circleci/ansible/backend-url.txt
-      # - destroy-environment:
-      #     run_id: ${RUN_ID:0:7}
+            - inventory.txt
+      - destroy_environment:
+          workflow_id: ${CIRCLE_WORKFLOW_ID:0:7}
+
+
   configure-infrastructure:
-    executor: python
+    working_directory: ~/UDAPEOPLE/.circleci/ansible
+    docker:
+      - image: python:3.7-alpine3.11
     steps:
-      - checkout
+      - checkout:
+          path: ~/UDAPEOPLE
       - add_ssh_keys:
           fingerprints: [89:f0:76:7a:9b:b1:e8:84:ba:62:36:0e:8e:e3:5c:4a]
       - attach_workspace:
-          at: .
+          at: /usr/local
       - run:
-          name: Install dependencies
+          name: Install ansible
           command: |
-            apk add --update ansible
-            ansible --version
+                  apk update
+                  apk add ansible
+                  ansible --version
+      - run: cat ansible/inventory.txt
       - run:
-          name: Configure server
-          command: |
-            cd .circleci/ansible
-            ansible-playbook -i inventory.txt configure-server.yml
-      # - destroy-environment:
-      #     run_id: ${RUN_ID:0:7}
-  
-  # deploy-infrastructure:
-  #   working_directory: ~/UDAPEOPLE/.circleci
-  #   docker:
-  #     - image: amazon/aws-cli
-  #   steps:
-  #     - checkout:
-  #         path: ~/UDAPEOPLE
-  #     - run:
-  #         name: Create backend infrastructure
-  #         command: |
-  #                   aws cloudformation deploy \
-  #                   --template-file files/backend.yml \
-  #                   --stack-name udapeople-backend-${CIRCLE_WORKFLOW_ID:0:7} \
-  #                   --parameter-overrides ID=${CIRCLE_WORKFLOW_ID:0:7} \
-  #                   --tags project=udapeople
-  #     - run:
-  #         name: Create frontend infrastructure
-  #         command: |
-  #                   aws cloudformation deploy \
-  #                   --template-file files/frontend.yml \
-  #                   --stack-name udapeople-frontend-${CIRCLE_WORKFLOW_ID:0:7} \
-  #                   --parameter-overrides ID=${CIRCLE_WORKFLOW_ID:0:7} \
-  #                   --tags project=udapeople
-  #     - run:
-  #         name:  Get hostname of servers
-  #         command: |
-  #                   aws ec2 describe-instances --filters \
-  #                   Name=tag:project,Values=udapeople --query \
-  #                   Reservations[*].Instances[*].PublicIpAddress --output \
-  #                   text >> ansible/inventory.txt    
-  #     - run: yum install -y tar gzip     
-  #     - persist_to_workspace:
-  #         root: ./ansible
-  #         paths:
-  #           - inventory.txt
-  #     - destroy_environment:
-  #         workflow_id: ${CIRCLE_WORKFLOW_ID:0:7}
-
-
-  # configure-infrastructure:
-  #   working_directory: ~/UDAPEOPLE/.circleci/ansible
-  #   docker:
-  #     - image: python:3.7-alpine3.11
-  #   steps:
-  #     - checkout:
-  #         path: ~/UDAPEOPLE
-  #     - add_ssh_keys:
-  #         fingerprints: [89:f0:76:7a:9b:b1:e8:84:ba:62:36:0e:8e:e3:5c:4a]
-  #     - attach_workspace:
-  #         at: /usr/local
-  #     - run:
-  #         name: Install ansible
-  #         command: |
-  #                 apk update
-  #                 apk add ansible
-  #                 ansible --version
-  #     - run: cat /usr/local/ansible/inventory.txt
-  #     - run:
-  #         name: Configure backend server
-  #         command: ansible-playbook -i /usr/local/ansible/inventory.txt configure-server.yml
+          name: Configure backend server
+          command: ansible-playbook -i ansible/inventory.txt configure-server.yml -vvvv
 
 
 
