@@ -172,7 +172,7 @@ jobs:
   configure-infrastructure:
     working_directory: ~/UDAPEOPLE/.circleci/ansible
     docker:
-      - image: python:3.7-alpine3.11
+      - image: python:3.9.16
     steps:
       - checkout:
           path: ~/UDAPEOPLE
