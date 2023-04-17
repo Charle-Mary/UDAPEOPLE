@@ -1,16 +1,5 @@
 version: 2.1
 
-executors:
-  node:
-    docker:
-      - image: circleci/node:13.8.0
-  python:
-    docker:
-      - image: python:3.9.0-alpine
-  aws:
-    docker:
-      - image: amazon/aws-cli
-
 orbs:
   slack: circleci/slack@4.12.1
   aws: circleci/aws-cli@3.1.5
@@ -194,6 +183,8 @@ jobs:
       - run:
           name: Configure backend server
           command: ansible-playbook -i ansible/inventory.txt configure-server.yml -vvvv
+      - destroy_environment:
+          workflow_id: ${CIRCLE_WORKFLOW_ID}
 
 
 
