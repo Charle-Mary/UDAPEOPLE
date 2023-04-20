@@ -10,13 +10,13 @@
   apt:
     upgrade: yes
 
-- name: Install Python
-  become: true
-  apt:
-    name: pm2
-    state: present
-
 - name: Install nodejs
   become: true
   apt:
     name: [nodejs, npm]
+
+- name: Install Python
+  become: true
+  npm:
+    name: pm2
+    state: present
