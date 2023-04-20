@@ -191,7 +191,7 @@ jobs:
     working_directory: ~/UDAPEOPLE/backend
     docker:
       # - image: circleci/node:13.8.0
-      - image: cimg/nodejs
+      - image: cimg/node
     steps:
       - install_dependencies:
           folder: backend
