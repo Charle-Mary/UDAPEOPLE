@@ -190,7 +190,8 @@ jobs:
   run-migrations:
     working_directory: ~/UDAPEOPLE/backend
     docker:
-      - image: circleci/node:13.8.0
+      # - image: circleci/node:13.8.0
+      - image: cimg/nodejs
     steps:
       - install_dependencies:
           folder: backend
