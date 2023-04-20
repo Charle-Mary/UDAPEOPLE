@@ -15,7 +15,7 @@
   apt:
     name: [nodejs, npm]
 
-- name: Install Python
+- name: Install Process manager
   become: true
   npm:
     name: pm2

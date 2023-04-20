@@ -2,7 +2,7 @@ version: 2.1
 
 orbs:
   slack: circleci/slack@4.12.1
-  #aws: circleci/aws-cli@3.1.5
+  aws: circleci/aws-cli@3.1.5
 
 default_frontend: &frontend
   working_directory: ~/UDAPEOPLE/frontend 
@@ -186,6 +186,24 @@ jobs:
           command: ansible-playbook -i ansible/inventory.txt configure-server.yml
       - destroy_environment:
           workflow_id: ${CIRCLE_WORKFLOW_ID:0:7}
+  
+  run-migrations:
+    working_directory: ~/UDAPEOPLE/backend
+    docker:
+      - image: circleci/node:13.8.0
+    steps:
+      - install_dependencies:
+          folder: backend
+      - run:
+          name: Migrate database to reflect changes
+          command: npm run migrations
+      # - run:
+      #     name: Send migration status to a key value store
+      #     command: |
+      #               if grep -q "has been executed successfully." \
+      #               migrations_dump.txt
+
+
 
 
 
@@ -204,10 +222,11 @@ workflows:
       # - scan-backend: 
       #     requires: [build-backend]
       #     context: uda-context
-      - deploy-infrastructure:
-          context: uda-context
+      # - deploy-infrastructure:
+      #     context: uda-context
           #requires: [scan-frontend, scan-backend]
-      - configure-infrastructure:
-          context: uda-context
-          requires: [deploy-infrastructure]
+      # - configure-infrastructure:
+      #     context: uda-context
+      #     requires: [deploy-infrastructure]
+      - run-migrations
           
