@@ -6,7 +6,6 @@ Parameters:
   ID:
     Description: Unique identifier.
     Type: String
-    Default: AKin30945
 
 Resources:
   WebsiteBucket:
