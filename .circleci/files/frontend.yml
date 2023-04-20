@@ -1,3 +1,4 @@
+AWSTemplateFormatVersion: "2010-09-09"
 Description: >
   UdaPeople frontend stack.
 
@@ -5,6 +6,7 @@ Parameters:
   ID:
     Description: Unique identifier.
     Type: String
+    Default: AKin30945
 
 Resources:
   WebsiteBucket:
@@ -14,7 +16,12 @@ Resources:
       # OwnershipControls:
       #   Rules:
       #     - ObjectOwnership: BucketOwnerEnforced
-      AccessControl: PublicRead
+      #AccessControl: PublicRead
+      # PublicAccessBlockConfiguration:
+      #   BlockPublicAcls: false
+      #   BlockPublicPolicy: false
+      #   IgnorePublicAcls: false
+      #   RestrictPublicBuckets: false
       WebsiteConfiguration:
         IndexDocument: index.html
         ErrorDocument: 404.html
@@ -24,6 +31,7 @@ Resources:
     Properties:
       Bucket: !Ref 'WebsiteBucket'
       PolicyDocument:
+        Version: "2012-10-17"
         Statement:
         - Sid: PublicReadForGetBucketObjects
           Effect: Allow
