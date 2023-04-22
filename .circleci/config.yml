@@ -270,6 +270,8 @@ jobs:
                     ls
                     cd backend
                     npm run build
+                    ls
+                    pwd
                     cd ..
                     tar -C backend -zcvf artifact.tar.gz .
       - run: 
