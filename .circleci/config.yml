@@ -222,7 +222,7 @@ jobs:
           command: |
                     yum install -y nodejs tar
                     python --version
-                    node --version
+                    nodejs --version
                     npm --version
                     yum install -y ansible
                     ansible --version
