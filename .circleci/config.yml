@@ -222,7 +222,7 @@ jobs:
           command: |
                     apt-get update -y
                     apt install ansible nodejs curl unzip tar -y
-                    pip install awscli -y
+                    pip install awscli
                     node --version
                     npm --version
                     ansible --version
