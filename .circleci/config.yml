@@ -227,7 +227,7 @@ jobs:
                     npm --version
                     ansible --version
       - attach_workspace:
-          at: .
+          at: ./ansible
       - run: ls 
       - run: ls ansible
       - run: ls ansible/inventory.txt
