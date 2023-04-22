@@ -217,17 +217,17 @@ jobs:
     steps:
       - checkout:
           path: ~/UDAPEOPLE
-      - attach_workspace:
-          at: ./ansible
       - run:
           name: Install dependencies
           command: |
-                    yum install -y nodejs
+                    yum install -y nodejs tar
                     python --version
                     node --version
                     npm --version
                     yum install -y ansible
                     ansible --version
+      - attach_workspace:
+          at: ./ansible
       - run: ls 
       
 
