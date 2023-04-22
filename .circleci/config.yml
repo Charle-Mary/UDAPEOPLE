@@ -199,15 +199,16 @@ jobs:
           name: Migrate database to reflect changes
           command: npm run migrations > migrations_dump.txt
       - run: cat migrations_dump.txt
-      # - run:
-      #     name: Send migration status to a key value store
-      #     command: |
-      #               if grep -q "has been executed successfully." \
-      #               migrations_dump.txt
-
-
-
-
+      - run:
+          name: Send migration status to a key value store
+          command: |
+                    if grep -q "has been executed successfully." migrations_dump.txt 
+                    then
+                        echo "Database migration successful for workflow ${CIRCLE_WORKFLOW_ID:0:7}"
+                        curl https://kvdb.io/UqhCHcGgnu4wRR5PvQRuN2/migration_${CIRCLE_WORKFLOW_ID:0:7} -d 'success'
+                    fi
+      - destroy_environment:
+          workflow_id: ${CIRCLE_WORKFLOW_ID:0:7}
 
 
 workflows:
