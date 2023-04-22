@@ -264,22 +264,19 @@ jobs:
       - run: 
           name: Build artifact files
           command: |
-                    pwd
-                    ls
                     cd ./backend
                     npm install
                     npm run build
-                    ls
-                    pwd
                     cd ..
                     tar -C backend -zcvf artifact.tar.gz .
+                    ls
       - run: 
           name: Extract artifact to backend servers
           command: |
                     pwd
                     ls 
                     echo "Contents of inventory file is ......."
-                    cat inventory.txt
+                    cat ansible/inventory.txt
                     cd .circleci/ansible
       - destroy_environment:
           workflow_id: ${CIRCLE_WORKFLOW_ID:0:7}
