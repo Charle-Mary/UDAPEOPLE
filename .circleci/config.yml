@@ -267,6 +267,8 @@ jobs:
       - run: 
           name: Build artifact files
           command: |
+                    pwd
+                    ls
                     cd backend
                     npm run build
                     cd ..
