@@ -260,7 +260,7 @@ jobs:
           name: Install dependencies
           command: |
                   apt-get update -y
-                  apt install tar ansible gzip unzip nodejs npm curl
+                  apt install tar ansible gzip unzip nodejs npm curl -y
       - install_dependencies:
           folder: backend
       - run: 
@@ -275,6 +275,8 @@ jobs:
                     echo "Contents of inventory file is ......."
                     cat backend/ansible/inventory.txt
                     cd .circleci/ansible
+      - destroy_environment:
+          workflow_id: ${CIRCLE_WORKFLOW_ID:0:7}
 
 
 workflows:
