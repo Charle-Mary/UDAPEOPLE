@@ -261,14 +261,13 @@ jobs:
                   apt-get update -y
                   apt install tar ansible gzip unzip nodejs npm curl -y
                   pip install awscli
-      - install_dependencies:
-          folder: backend
       - run: 
           name: Build artifact files
           command: |
                     pwd
                     ls
                     cd ./backend
+                    npm install
                     npm run build
                     ls
                     pwd
