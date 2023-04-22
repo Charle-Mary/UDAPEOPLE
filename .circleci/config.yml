@@ -220,9 +220,9 @@ jobs:
       - run:
           name: Install dependencies
           command: |
-                    yum install -y nodejs tar
+                    yum install nodejs tar -y
                     python --version
-                    nodejs --version
+                    node --version
                     npm --version
                     yum install -y ansible
                     ansible --version
