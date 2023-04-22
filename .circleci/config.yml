@@ -231,9 +231,13 @@ jobs:
       - run:
           name: Setup frontend environmental variable
           command: |
-                    cat ansible/inventory.txt | grep 'amazonaws' \
-                    | export BACKEND_IP=${1}
-                    echo BACKEND_IP
+                    export BACKEND_IP=$(cat ansible/inventory.txt | grep 'amazonaws')
+                    export API_URL="http://${BACKEND_IP}:3030"
+                    echo "API_URL = ${API_URL}"
+                    echo API_URL=${API_URL} >> .env
+                    cat .env
+      - destroy_environment:
+          workflow_id: ${CIRCLE_WORKFLOW_ID:0:7}
       
 
 
