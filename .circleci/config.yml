@@ -213,21 +213,18 @@ jobs:
   deploy-frontend:
     working_directory: ~/UDAPEOPLE/frontend
     docker:
-      - image: amazon/aws-cli
+      - image: python:3.9.16
     steps:
       - checkout:
           path: ~/UDAPEOPLE
       - run:
           name: Install dependencies
           command: |
-                    yum install tar -y
-                    curl -o- https://raw.githubusercontent.com/nvm-sh/nvm/v0.39.3/install.sh | bash
-                    . ~/.nvm/nvm.sh
-                    nvm install --lts
-                    python --version
+                    apt-get update -y
+                    apt install ansible nodejs curl unzip tar -y
+                    pip install awscli -y
                     node --version
                     npm --version
-                    yum install -y ansible
                     ansible --version
       - attach_workspace:
           at: ./ansible
