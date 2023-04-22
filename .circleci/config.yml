@@ -209,13 +209,34 @@ jobs:
                     fi
       - destroy_environment:
           workflow_id: ${CIRCLE_WORKFLOW_ID:0:7}
+  
+  deploy-frontend:
+    working_directory: ~/UDAPEOPLE/frontend
+    docker:
+      - image: amazon/aws-cli
+    steps:
+      - checkout:
+          path: ~/UDAPEOPLE
+      - attach_workspace:
+          at: ./ansible
+      - run:
+          name: Install dependencies
+          command: |
+                    yum install -y nodejs
+                    python --version
+                    node --version
+                    npm --version
+                    yum install -y ansible
+                    ansible --version
+      - run: ls 
+      
 
 
 workflows:
   uda_people_workflow:
     jobs:
       # - build-frontend
-      - build-backend
+      # - build-backend
       # - test-frontend:
       #     requires: [build-frontend]
       # - test-backend:
@@ -231,6 +252,7 @@ workflows:
       # - configure-infrastructure:
       #     context: uda-context
       #     requires: [deploy-infrastructure]
-      - run-migrations:
-          requires: [build-backend]
+      # - run-migrations:
+      #     requires: [build-backend]
+      - deploy-frontend
           
