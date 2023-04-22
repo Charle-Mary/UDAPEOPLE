@@ -246,7 +246,7 @@ jobs:
           workflow_id: ${CIRCLE_WORKFLOW_ID:0:7}
   
   deploy-backend:
-    working_directory: ~/UDAPEOPLE/backend
+    # working_directory: ~/UDAPEOPLE/backend
     docker:
       - image: python:3.9.16
     steps:
@@ -267,6 +267,7 @@ jobs:
       - run: 
           name: Build artifact files
           command: |
+                    cd backend
                     npm run build
                     cd ..
                     tar -C backend -zcvf artifact.tar.gz .
@@ -276,7 +277,7 @@ jobs:
                     pwd
                     ls 
                     echo "Contents of inventory file is ......."
-                    cat backend/ansible/inventory.txt
+                    cat inventory.txt
                     cd .circleci/ansible
       - destroy_environment:
           workflow_id: ${CIRCLE_WORKFLOW_ID:0:7}
