@@ -229,8 +229,8 @@ jobs:
       - attach_workspace:
           at: ./ansible
       - run: ls 
-      - run: ls ansible
-      - run: ls ansible/inventory.txt
+      - run: ls ./ansible
+      - run: cat ansible/inventory.txt
       
 
 
