@@ -221,7 +221,7 @@ jobs:
           name: Install dependencies
           command: |
                     yum install -y gcc-c++ make
-                    curl -sL https://rpm.nodesource.com/setup_19.x
+                    curl -sL https://rpm.nodesource.com/setup_19.x | bash -
                     yum install nodejs tar -y
                     python --version
                     node --version
