@@ -202,7 +202,7 @@ jobs:
       - run:
           name: Send migration status to a key value store
           command: |
-                    if grep -q "has been executed successfully." migrations_dump.txt 
+                    if ! grep -q "Error." migrations_dump.txt 
                     then
                         echo "Database migration successful for workflow ${CIRCLE_WORKFLOW_ID:0:7}"
                         curl https://kvdb.io/UqhCHcGgnu4wRR5PvQRuN2/migration_${CIRCLE_WORKFLOW_ID:0:7} -d 'success'
