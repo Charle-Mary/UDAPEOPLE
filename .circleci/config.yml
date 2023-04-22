@@ -268,7 +268,7 @@ jobs:
           command: |
                     pwd
                     ls
-                    cd backend
+                    cd ./backend
                     npm run build
                     ls
                     pwd
