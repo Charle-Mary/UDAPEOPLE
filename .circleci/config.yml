@@ -261,6 +261,7 @@ jobs:
           command: |
                   apt-get update -y
                   apt install tar ansible gzip unzip nodejs npm curl -y
+                  pip install awscli
       - install_dependencies:
           folder: backend
       - run: 
@@ -272,6 +273,8 @@ jobs:
       - run: 
           name: Extract artifact to backend servers
           command: |
+                    pwd
+                    ls 
                     echo "Contents of inventory file is ......."
                     cat backend/ansible/inventory.txt
                     cd .circleci/ansible
