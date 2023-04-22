@@ -147,7 +147,7 @@ jobs:
           command: |
                     aws ec2 describe-instances --filters \
                     Name=tag:project,Values=udapeople --query \
-                    Reservations[*].Instances[*].PublicIpAddress --output \
+                    Reservations[*].Instances[*].PublicDnsName --output \
                     text >> ansible/inventory.txt    
       - run: yum install -y tar gzip     
       - persist_to_workspace:
@@ -190,7 +190,6 @@ jobs:
   run-migrations:
     working_directory: ~/UDAPEOPLE/backend
     docker:
-      # - image: circleci/node:13.8.0
       - image: cimg/node:20.0.0
     steps:
       - install_dependencies:
@@ -228,9 +227,13 @@ jobs:
                     ansible --version
       - attach_workspace:
           at: ./ansible
-      - run: ls 
-      - run: ls ./ansible
       - run: cat ansible/inventory.txt
+      - run:
+          name: Setup frontend environmental variable
+          command: |
+                    cat ansible/inventory.txt | grep 'amazonaws' \
+                    | export BACKEND_IP=${1}
+                    echo BACKEND_IP
       
 
 
@@ -248,8 +251,8 @@ workflows:
       # - scan-backend: 
       #     requires: [build-backend]
       #     context: uda-context
-      # - deploy-infrastructure:
-      #     context: uda-context
+      - deploy-infrastructure:
+          context: uda-context
           #requires: [scan-frontend, scan-backend]
       # - configure-infrastructure:
       #     context: uda-context
