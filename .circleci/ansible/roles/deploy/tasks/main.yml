@@ -1,6 +1,13 @@
 ---
 
+- name: Verify working durectory
+  become: true
+  shell: |
+          pwd
+          ls 
+
 - name: Extract files to backend servers
+  become: true
   unarchive:
     src: ../artifact.tar.gz
     dest: ~/backend
@@ -11,16 +18,21 @@
 #     path: ~/backend
 
 - name: Stop default process
+  become: true
   command: pm2 stop default
   args:
     chdir: ~/backend
+  register: shell_output
 
 - name: Start pm2 process
+  become: true
   command: pm2 start npm -- start
   args:
     chdir: ~/backend
+  register: shell_output
 
 - name: Check process status
+  become: true
   command: pm2 status
-
+  register: shell_output
   
