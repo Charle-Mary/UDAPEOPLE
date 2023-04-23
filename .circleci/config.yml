@@ -41,7 +41,7 @@ commands:
           name: destroy environments
           when: on_fail
           command: |
-                  aws s3 rb s3://udapeople-frontend-<<parameters.workflow_id>> --force 
+                  aws s3 rb s3://udapeople-<<parameters.workflow_id>> --force 
                   aws cloudformation delete-stack --stack-name udapeople-frontend-<<parameters.workflow_id>>
                   aws cloudformation delete-stack --stack-name udapeople-backend-<<parameters.workflow_id>>
 
@@ -300,7 +300,7 @@ jobs:
           command: |
                     apk update
                     apk add tar curl nodejs npm python3 aws-cli
-                    aws version
+                    aws --version
       - run:
           name: Test api endpoint
           command: |
