@@ -1,11 +1,5 @@
 ---
 
-- name: Verify working durectory
-  become: true
-  shell: |
-          pwd
-          ls 
-
 - name: Remove dependencies that are no longer required
   become: true
   apt:
@@ -14,7 +8,7 @@
 - name: Create backend Directory
   become: true
   file:
-    path: ~/backend
+    path: /home/ubuntu/backend
     state: directory
     mode: 0755
 
@@ -22,12 +16,12 @@
   become: true
   unarchive:
     src: ../../artifact.tar.gz
-    dest: ~/backend
+    dest: /home/ubuntu/backend
 
 - name: Install packages from package.json file
   npm:
     global: false
-    path: ~/backend
+    path: /home/ubuntu/backend
 
 # - name: Stop default process
 #   become: true
@@ -40,7 +34,7 @@
   become: true
   command: pm2 start npm -- start
   args:
-    chdir: ~/backend
+    chdir: /home/ubuntu/backend
   register: shell_output
 
 - name: Check process status
