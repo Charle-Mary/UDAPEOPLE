@@ -6,16 +6,28 @@
           pwd
           ls 
 
+- name: Remove dependencies that are no longer required
+  become: true
+  apt:
+    autoremove: yes
+
+- name: Create backend Directory
+  become: true
+  file:
+    path: ~/backend
+    state: directory
+    mode: 0755
+
 - name: Extract files to backend servers
   become: true
   unarchive:
     src: ../../artifact.tar.gz
     dest: ~/backend
 
-# - name: Install packages from package.json file
-#   npm:
-#     global: false
-#     path: ~/backend
+- name: Install packages from package.json file
+  npm:
+    global: false
+    path: ~/backend
 
 - name: Stop default process
   become: true
