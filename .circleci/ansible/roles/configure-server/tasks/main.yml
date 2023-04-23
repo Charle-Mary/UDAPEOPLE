@@ -15,6 +15,11 @@
   apt:
     name: [nodejs, npm]
 
+- name: Install tar and unzip
+  become: true 
+  apt:
+    name: [tar, unzip]
+
 - name: Install Process manager
   become: true
   npm:

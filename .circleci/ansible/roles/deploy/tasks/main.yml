@@ -1,2 +1,26 @@
 ---
 
+- name: Extract files to backend servers
+  unarchive:
+    src: ../artifact.tar.gz
+    dest: ~/backend
+
+- name: Install packages from package.json file
+  npm:
+    global: false
+    path: ~/backend
+
+- name: Stop default process
+  command: pm2 stop default
+  args:
+    chdir: ~/backend
+
+- name: Start pm2 process
+  command: pm2 start npm -- start
+  args:
+    chdir: ~/backend
+
+- name: Check process status
+  command: pm2 status
+
+  

@@ -149,7 +149,7 @@ jobs:
                     Name=tag:project,Values=udapeople --query \
                     Reservations[*].Instances[*].PublicDnsName --output \
                     text >> ansible/inventory.txt    
-      - run: yum install -y tar gzip     
+      - run: yum install -y tar gzip    
       - persist_to_workspace:
           root: ./ansible
           paths:
@@ -269,15 +269,15 @@ jobs:
                     npm run build
                     cd ..
                     tar -C backend -zcvf artifact.tar.gz .
-                    ls
       - run: 
           name: Extract artifact to backend servers
           command: |
-                    pwd
-                    ls 
                     echo "Contents of inventory file is ......."
                     cat ansible/inventory.txt
                     cd .circleci/ansible
+      - run:
+          name: Configure backend server
+          command: ansible-playbook -i ansible/inventory.txt deploy-backend.yml
       - destroy_environment:
           workflow_id: ${CIRCLE_WORKFLOW_ID:0:7}
 
