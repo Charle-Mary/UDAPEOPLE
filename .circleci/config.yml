@@ -275,6 +275,7 @@ jobs:
                     echo "Contents of inventory file is ......."
                     cat ansible/inventory.txt
                     cd .circleci/ansible
+                    ls
       - run:
           name: Configure backend server
           command: ansible-playbook -i ansible/inventory.txt deploy-backend.yml
