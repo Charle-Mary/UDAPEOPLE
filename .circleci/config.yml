@@ -278,7 +278,9 @@ jobs:
                     ls
       - run:
           name: Configure backend server
-          command: ansible-playbook -i ansible/inventory.txt deploy-backend.yml
+          command: |
+                    ls
+                    ansible-playbook -i ansible/inventory.txt ./deploy-backend.yml
       - destroy_environment:
           workflow_id: ${CIRCLE_WORKFLOW_ID:0:7}
 
