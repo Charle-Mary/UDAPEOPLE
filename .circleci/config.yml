@@ -246,25 +246,27 @@ jobs:
           workflow_id: ${CIRCLE_WORKFLOW_ID:0:7}
   
   deploy-backend:
-    # working_directory: ~/UDAPEOPLE/backend
+    working_directory: ~/UDAPEOPLE/.circleci/ansible
     docker:
       - image: python:3.9.16
     steps:
-      - checkout
+      - checkout:
+          path: ~/UDAPEOPLE
       - add_ssh_keys:
           fingerprints: ["89:f0:76:7a:9b:b1:e8:84:ba:62:36:0e:8e:e3:5c:4a"]
       - attach_workspace:
-          at: ./ansible
+          at: .
       - run:
           name: Install dependencies
           command: |
                   apt-get update -y
                   apt install tar ansible gzip unzip nodejs npm curl -y
                   pip install awscli
+                  ls
       - run: 
           name: Build artifact files
           command: |
-                    cd ./backend
+                    cd ../../backend
                     npm install
                     npm run build
                     cd ..
@@ -273,12 +275,14 @@ jobs:
           name: Extract artifact to backend servers
           command: |
                     echo "Contents of inventory file is ......."
-                    cat ansible/inventory.txt
-                    cd .circleci/ansible
+                    cat inventory.txt
                     ls
       - run:
           name: Configure backend server
-          command: ansible-playbook -i ansible/inventory.txt .circleci/ansible/deploy-backend.yml
+          command: |
+                    ls
+                    pwd
+                    ansible-playbook -i inventory.txt deploy-backend.yml
       - destroy_environment:
           workflow_id: ${CIRCLE_WORKFLOW_ID:0:7}
 
