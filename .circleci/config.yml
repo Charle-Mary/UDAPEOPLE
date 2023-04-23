@@ -305,8 +305,10 @@ jobs:
           name: Test api endpoint
           command: |
                     ls
+                    cat backend-url.txt
+                    cat inventory.txt
                     export BACKEND_IP=$(cat backend-url.txt)
-                    export API_URL="http://${BACKEND_IP}:3030"
+                    export API_URL="${BACKEND_IP}"
                     echo ${API_URL}
                     if curl "${API_URL}/api/status" | grep "ok"
                       then
