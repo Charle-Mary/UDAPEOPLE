@@ -299,7 +299,7 @@ jobs:
           name: Install dependencies
           command: |
                     apk update
-                    apk add tar curl nodejs npm python3 aws-cli -y
+                    apk add tar curl nodejs npm python3 aws-cli
                     aws version
       - run:
           name: Test api endpoint
