@@ -29,12 +29,12 @@
     global: false
     path: ~/backend
 
-- name: Stop default process
-  become: true
-  command: pm2 stop default
-  args:
-    chdir: ~/backend
-  register: shell_output
+# - name: Stop default process
+#   become: true
+#   command: pm2 stop default
+#   args:
+#     chdir: ~/backend
+#   register: shell_output
 
 - name: Start pm2 process
   become: true
