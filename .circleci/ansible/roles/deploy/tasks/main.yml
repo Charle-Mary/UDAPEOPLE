@@ -1,10 +1,5 @@
 ---
 
-- name: Remove dependencies that are no longer required
-  become: true
-  apt:
-    autoremove: yes
-
 - name: Create backend Directory
   become: true
   file:
@@ -23,15 +18,17 @@
     global: false
     path: /home/ubuntu/backend
 
-# - name: Stop default process
-#   become: true
-#   command: pm2 stop default
-#   args:
-#     chdir: ~/backend
-#   register: shell_output
+- name: Stop default process
+  become: true
+  become_method: sudo
+  command: pm2 stop default
+  args:
+    chdir: ~/backend
+  register: shell_output
 
 - name: Start pm2 process
   become: true
+  become_method: sudo
   command: pm2 start npm -- start
   args:
     chdir: /home/ubuntu/backend
@@ -39,6 +36,7 @@
 
 - name: Check process status
   become: true
+  become_method: sudo
   command: pm2 status
   register: shell_output
   
