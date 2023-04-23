@@ -285,7 +285,8 @@ jobs:
                     ls
                     npm install
                     npm run build
-                    tar -zcvf artifact.tar.gz .
+                    cd ..
+                    tar -C backend -zcvf artifact.tar.gz .
                     ls
       - run: 
           name: Extract artifact to backend servers
