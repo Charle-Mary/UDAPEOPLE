@@ -23,7 +23,7 @@
   become_method: sudo
   command: pm2 stop default
   args:
-    chdir: ~/backend
+    chdir: /home/ubuntu/backend
   register: shell_output
 
 - name: Start pm2 process
