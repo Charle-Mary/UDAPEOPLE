@@ -170,6 +170,7 @@ jobs:
           fingerprints: ["89:f0:76:7a:9b:b1:e8:84:ba:62:36:0e:8e:e3:5c:4a"]
       - attach_workspace:
           at: ./ansible
+      - run: echo ${TYPEORM_HOST}
       - run:
           name: Install ansible
           command: |
@@ -193,8 +194,11 @@ jobs:
     docker:
       - image: cimg/node:20.0.0
     steps:
-      - install_dependencies:
-          folder: backend
+      - checkout:
+          path: ~/UDAPEOPLE
+      - run:
+          name: Install package dependencies
+          command: npm install
       - run:
           name: Migrate database to reflect changes
           command: npm run migrations > migrations_dump.txt
@@ -238,6 +242,7 @@ jobs:
                     echo ${API_URL} >> backend-url.txt
                     cat backend-url.txt
                     cat .env
+                    ls -al
       - run:
           name: Deploy frontend objects
           command: |
@@ -245,6 +250,8 @@ jobs:
                     npm run build
                     tar -czvf artifact-"${CIRCLE_WORKFLOW_ID:0:7}".tar.gz dist
                     aws s3 cp dist s3://udapeople-${CIRCLE_WORKFLOW_ID:0:7} --recursive
+                    ls -al
+                    pwd
       - persist_to_workspace:
           root: .
           paths: backend-url.txt
@@ -269,14 +276,17 @@ jobs:
                   apt install tar ansible gzip unzip nodejs npm curl -y
                   pip install awscli
                   ls
+                  pwd
       - run: 
           name: Build artifact files
           command: |
                     cd ../../backend
+                    pwd
+                    ls
                     npm install
                     npm run build
-                    cd ..
-                    tar -C backend -zcvf artifact.tar.gz .
+                    tar -zcvf artifact.tar.gz .
+                    ls
       - run: 
           name: Extract artifact to backend servers
           command: |
@@ -312,7 +322,7 @@ jobs:
                     echo ${API_URL}
                     if curl "${API_URL}/api/status" | grep "ok"
                       then
-                        return 0
+                        return 1
                       else
                         return 1
                     fi
@@ -323,7 +333,7 @@ jobs:
                     echo ${URL}
                     if curl -s ${URL} | grep "Welcome"
                       then
-                        return 0
+                        return 1
                       else
                         return 1
                     fi

@@ -18,14 +18,6 @@
     global: false
     path: /home/ubuntu/backend
 
-# - name: Stop default process
-#   become: true
-#   become_method: sudo
-#   command: pm2 stop default
-#   args:
-#     chdir: /home/ubuntu/backend
-#   register: shell_output
-
 - name: Start pm2 process
   become: true
   become_method: sudo
