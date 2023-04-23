@@ -9,7 +9,7 @@
 - name: Extract files to backend servers
   become: true
   unarchive:
-    src: ../artifact.tar.gz
+    src: ../../artifact.tar.gz
     dest: ~/backend
 
 # - name: Install packages from package.json file
