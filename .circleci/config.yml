@@ -52,9 +52,10 @@ commands:
     steps:
       - run:
           name: Revert migrations
+          when: on_fail
           command: |
-                    SUCCESS=$(curl https://kvdb.io/UqhCHcGgnu4wRR5PvQRuN2/migration_${CIRCLE_WORKFLOW_ID:0:7})
-                    if $SUCCESS == 1
+                    SUCCESS=$(curl -s https://kvdb.io/UqhCHcGgnu4wRR5PvQRuN2/migration_${CIRCLE_WORKFLOW_ID:0:7})
+                    if $SUCCESS == "success"
                       then
                         cd ~/UDAPEOPLE/backend
                         npm install
@@ -195,7 +196,7 @@ jobs:
       - run: cat inventory.txt
       - run:
           name: Configure backend server
-          command: ansible-playbook -i ansible/inventory.txt configure-server.yml
+          command: ansible-playbook -i inventory.txt configure-server.yml
       - destroy_environment:
           workflow_id: ${CIRCLE_WORKFLOW_ID:0:7}
   
@@ -247,11 +248,13 @@ jobs:
                     apt install ansible nodejs npm curl unzip tar -y
                     pip install awscli
       - attach_workspace:
-          at: ./ansible
+          at: .
       - run:
           name: Setup frontend environmental variable
           command: |
-                    export BACKEND_IP=$(cat ansible/inventory.txt | grep 'amazonaws')
+                    ls
+                    cat inventory.txt
+                    export BACKEND_IP=$(cat inventory.txt | grep 'amazonaws')
                     export API_URL="http://${BACKEND_IP}:3030"
                     echo API_URL=${API_URL} >> .env
                     echo ${API_URL} >> backend-url.txt
@@ -284,6 +287,8 @@ jobs:
       - run:
           name: Install dependencies
           command: |
+                  ls
+                  cat inventory.txt
                   apt-get update -y
                   apt install tar ansible gzip unzip nodejs npm curl -y
                   pip install awscli
@@ -291,14 +296,15 @@ jobs:
           name: Build artifact files
           command: |
                     cd ../../backend
-                    printenv
                     printenv | grep TYPEORM >> .env 
+                    cat .env
                     npm install
                     npm run build
       - run: 
           name: Extract artifact to backend servers
           command: |
-                    cd ../..
+                    cd ../../
+                    ls
                     tar -C backend -zcvf artifact.tar.gz .
                     echo "Contents of inventory file is ......."
                     cat inventory.txt
