@@ -44,6 +44,22 @@ commands:
                   aws s3 rb s3://udapeople-<<parameters.workflow_id>> --force 
                   aws cloudformation delete-stack --stack-name udapeople-frontend-<<parameters.workflow_id>>
                   aws cloudformation delete-stack --stack-name udapeople-backend-<<parameters.workflow_id>>
+  
+  revert_migrations:
+    parameters:
+      workflow_id:
+        type: string
+    steps:
+      - run:
+          name: Revert migrations
+          command: |
+                    SUCCESS=$(curl https://kvdb.io/UqhCHcGgnu4wRR5PvQRuN2/migration_${CIRCLE_WORKFLOW_ID:0:7})
+                    if $SUCCESS == 1
+                      then
+                        cd ~/UDAPEOPLE/backend
+                        npm install
+                        npm run migrations:revert
+                    fi
 
 
 jobs:
@@ -173,15 +189,9 @@ jobs:
       - run:
           name: Install ansible
           command: |
-                  ls
                   apt-get update -y
-                  apt install ansible unzip curl -y
-                  ansible --version
-                  which ansible
-                  curl "https://awscli.amazonaws.com/awscli-exe-linux-x86_64.zip" -o "awscliv2.zip"
-                  unzip awscliv2.zip
-                  ./aws/install
-                  aws --version
+                  apt install ansible curl tar -y
+                  pip install awscli
       - run: cat inventory.txt
       - run:
           name: Configure backend server
@@ -202,16 +212,12 @@ jobs:
                     apt-get update -y
                     apt install ansible nodejs npm curl unzip tar -y
                     pip install awscli
-                    node --version
-                    npm --version
-                    ansible --version
       - run:
           name: Install package dependencies
           command: npm install
-      - run: npm run migrations:revert
-      # - run:
-      #     name: Migrate database to reflect changes
-      #     command: npm run migrations > migrations_dump.txt
+      - run:
+          name: Migrate database to reflect changes
+          command: npm run migrations > migrations_dump.txt
       - run: cat migrations_dump.txt
       - run:
           name: Send migration status to a key value store
@@ -240,12 +246,8 @@ jobs:
                     apt-get update -y
                     apt install ansible nodejs npm curl unzip tar -y
                     pip install awscli
-                    node --version
-                    npm --version
-                    ansible --version
       - attach_workspace:
           at: ./ansible
-      - run: cat ansible/inventory.txt
       - run:
           name: Setup frontend environmental variable
           command: |
@@ -254,7 +256,7 @@ jobs:
                     echo API_URL=${API_URL} >> .env
                     echo ${API_URL} >> backend-url.txt
       - run:
-          name: Deploy frontend objects
+          name: Deploy frontend artifacts
           command: |
                     npm install
                     npm run build
@@ -263,6 +265,8 @@ jobs:
       - persist_to_workspace:
           root: .
           paths: backend-url.txt
+      - revert_migrations:
+          workflow_id: ${CIRCLE_WORKFLOW_ID:0:7}
       - destroy_environment:
           workflow_id: ${CIRCLE_WORKFLOW_ID:0:7}
   
@@ -283,31 +287,29 @@ jobs:
                   apt-get update -y
                   apt install tar ansible gzip unzip nodejs npm curl -y
                   pip install awscli
-                  ls
-                  pwd
       - run: 
           name: Build artifact files
           command: |
                     cd ../../backend
-                    pwd
-                    ls
+                    printenv
+                    printenv | grep TYPEORM >> .env 
                     npm install
                     npm run build
-                    cd ..
-                    tar -C backend -zcvf artifact.tar.gz .
-                    ls
       - run: 
           name: Extract artifact to backend servers
           command: |
+                    cd ../..
+                    tar -C backend -zcvf artifact.tar.gz .
                     echo "Contents of inventory file is ......."
                     cat inventory.txt
-                    ls
       - run:
-          name: Configure backend server
+          name: Deploy backend artifacts
           command: ansible-playbook -i inventory.txt deploy-backend.yml
+      - revert_migrations:
+          workflow_id: ${CIRCLE_WORKFLOW_ID:0:7}
       - destroy_environment:
           workflow_id: ${CIRCLE_WORKFLOW_ID:0:7}
-  
+      
   smoke-test:
     docker:
       - image: alpine
@@ -319,9 +321,8 @@ jobs:
           command: |
                     apk update
                     apk add tar curl nodejs npm python3 aws-cli
-                    aws --version
       - run:
-          name: Test frontend
+          name: frontend smoke test status
           command: |
                     URL="http://udapeople-${CIRCLE_WORKFLOW_ID:0:7}.s3-website-us-west-2.amazonaws.com"
                     echo ${URL}
@@ -335,9 +336,8 @@ jobs:
                     fi
 
       - run:
-          name: Test api endpoint
+          name: Backend smoke test status
           command: |
-                    ls
                     cat backend-url.txt
                     cat inventory.txt
                     export BACKEND_IP=$(cat backend-url.txt)
@@ -351,7 +351,8 @@ jobs:
                         echo "Backend smoke test failed"
                         return 1
                     fi
-      
+      # - revert_migrations:
+      #     workflow_id: ${CIRCLE_WORKFLOW_ID:0:7}
       # - destroy_environment:
       #     workflow_id: ${CIRCLE_WORKFLOW_ID:0:7}    
 
