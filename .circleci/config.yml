@@ -375,7 +375,7 @@ workflows:
       # - scan-backend: 
       #     requires: [build-backend]
       #     context: uda-context
-      - deploy-infrastructure:
+      - deploy-infrastructure
           #requires: [scan-frontend, scan-backend]
       - configure-infrastructure:
           requires: [deploy-infrastructure]
