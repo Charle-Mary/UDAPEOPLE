@@ -14,14 +14,24 @@
     dest: /home/ubuntu/backend
 
 - name: Install packages from package.json file
-  npm:
-    global: false
-    path: /home/ubuntu/backend
+  become: true
+  become_method: sudo
+  become_user: root
+  command: npm install
+  args:
+    chdir: /home/ubuntu/backend
+
+
+# - name: Install packages from package.json file
+#   npm:
+#     global: false
+#     path: /home/ubuntu/backend
 
 - name: Start pm2 process
   become: true
   become_method: sudo
-  command: pm2 start npm -- start
+  become_user: root
+  command: pm2 start npm --name "backend" -- run start
   args:
     chdir: /home/ubuntu/backend
   register: shell_output
@@ -29,6 +39,7 @@
 - name: Check process status
   become: true
   become_method: sudo
+  become_user: root
   command: pm2 status
   register: shell_output
   

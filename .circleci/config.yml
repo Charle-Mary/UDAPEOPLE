@@ -206,10 +206,12 @@ jobs:
       - run:
           name: Send migration status to a key value store
           command: |
-                    if ! grep -q "Error." migrations_dump.txt 
+                    if grep -q "executed successfully" migrations_dump.txt 
                     then
                         echo "Database migration successful for workflow ${CIRCLE_WORKFLOW_ID:0:7}"
                         curl https://kvdb.io/UqhCHcGgnu4wRR5PvQRuN2/migration_${CIRCLE_WORKFLOW_ID:0:7} -d 'success'
+                    else
+                        echo "Database migration was unsuccessful"
                     fi
       - destroy_environment:
           workflow_id: ${CIRCLE_WORKFLOW_ID:0:7}
@@ -313,6 +315,20 @@ jobs:
                     apk add tar curl nodejs npm python3 aws-cli
                     aws --version
       - run:
+          name: Test frontend
+          command: |
+                    URL="http://udapeople-${CIRCLE_WORKFLOW_ID:0:7}.s3-websites-us-west-2.amazonaws.com/#/employees"
+                    echo ${URL}
+                    if curl -s ${URL} | grep "Welcome"
+                      then
+                        echo "Frontend smoke test passed"
+                        return 0
+                      else
+                        echo "Frontend smoke test failed"
+                        return 1
+                    fi
+
+      - run:
           name: Test api endpoint
           command: |
                     ls
@@ -323,21 +339,13 @@ jobs:
                     echo ${API_URL}
                     if curl "${API_URL}/api/status" | grep "ok"
                       then
+                        echo "Backend smoke test passed"
                         return 0
                       else
+                        echo "Backend smoke test failed"
                         return 1
                     fi
-      - run:
-          name: Test frontend
-          command: |
-                    URL="http://udapeople-${CIRCLE_WORKFLOW_ID:0:7}.s3-websites-us-west-2.amazonaws.com/#/employees"
-                    echo ${URL}
-                    if curl -s ${URL} | grep "Welcome"
-                      then
-                        return 0
-                      else
-                        return 1
-                    fi
+      
       # - destroy_environment:
       #     workflow_id: ${CIRCLE_WORKFLOW_ID:0:7}    
 
