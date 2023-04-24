@@ -55,7 +55,7 @@ commands:
           when: on_fail
           command: |
                     SUCCESS=$(curl -s https://kvdb.io/UqhCHcGgnu4wRR5PvQRuN2/migration_${CIRCLE_WORKFLOW_ID:0:7})
-                    if [ $SUCCESS == "success" ]
+                    if (($SUCCESS=="success" ));
                       then
                         cd ~/UDAPEOPLE/backend
                         npm install
@@ -309,11 +309,12 @@ jobs:
                     cd ../../
                     ls
                     tar -C backend -zcvf artifact.tar.gz .
-                    echo "Contents of inventory file is ......."
-                    cat inventory.txt
       - run:
           name: Deploy backend artifacts
-          command: ansible-playbook -i inventory.txt deploy-backend.yml
+          command: |
+                    echo "Contents of inventory file is ......."
+                    cat inventory.txt
+                    ansible-playbook -i inventory.txt deploy-backend.yml
       - revert_migrations:
           workflow_id: ${CIRCLE_WORKFLOW_ID:0:7}
       - destroy_environment:
