@@ -55,7 +55,7 @@ commands:
           when: on_fail
           command: |
                     SUCCESS=$(curl -s https://kvdb.io/UqhCHcGgnu4wRR5PvQRuN2/migration_${CIRCLE_WORKFLOW_ID:0:7})
-                    if $SUCCESS == "success"
+                    if [ $SUCCESS == "success" ]
                       then
                         cd ~/UDAPEOPLE/backend
                         npm install
@@ -227,12 +227,15 @@ jobs:
                     then
                         echo "Database migration successful for workflow ${CIRCLE_WORKFLOW_ID:0:7}"
                         curl https://kvdb.io/UqhCHcGgnu4wRR5PvQRuN2/migration_${CIRCLE_WORKFLOW_ID:0:7} -d 'success'
+                    elif grep -q "No migrations are pending" migrations_dump.txt 
+                    then
+                        echo "No pending migrations"
                     else
                         echo "Database migration was unsuccessful"
                         return 1
                     fi
-      # - destroy_environment:
-      #     workflow_id: ${CIRCLE_WORKFLOW_ID:0:7}
+      - destroy_environment:
+          workflow_id: ${CIRCLE_WORKFLOW_ID:0:7}
   
   deploy-frontend:
     working_directory: ~/UDAPEOPLE/frontend
