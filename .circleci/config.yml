@@ -169,10 +169,11 @@ jobs:
       - add_ssh_keys:
           fingerprints: ["89:f0:76:7a:9b:b1:e8:84:ba:62:36:0e:8e:e3:5c:4a"]
       - attach_workspace:
-          at: ./ansible
+          at: .
       - run:
           name: Install ansible
           command: |
+                  ls
                   apt-get update -y
                   apt install ansible unzip curl -y
                   ansible --version
@@ -181,7 +182,7 @@ jobs:
                   unzip awscliv2.zip
                   ./aws/install
                   aws --version
-      - run: cat ansible/inventory.txt
+      - run: cat inventory.txt
       - run:
           name: Configure backend server
           command: ansible-playbook -i ansible/inventory.txt configure-server.yml
@@ -207,6 +208,7 @@ jobs:
       - run:
           name: Install package dependencies
           command: npm install
+      - run: npm run migrations:revert
       - run:
           name: Migrate database to reflect changes
           command: npm run migrations > migrations_dump.txt
@@ -214,7 +216,7 @@ jobs:
       - run:
           name: Send migration status to a key value store
           command: |
-                    if grep -q "has been executed successfully" migrations_dump.txt 
+                    if ! grep -q "has been executed successfully" migrations_dump.txt 
                     then
                         echo "Database migration successful for workflow ${CIRCLE_WORKFLOW_ID:0:7}"
                         curl https://kvdb.io/UqhCHcGgnu4wRR5PvQRuN2/migration_${CIRCLE_WORKFLOW_ID:0:7} -d 'success'
@@ -374,20 +376,15 @@ workflows:
       #     requires: [build-backend]
       #     context: uda-context
       - deploy-infrastructure:
-          context: uda-context
           #requires: [scan-frontend, scan-backend]
       - configure-infrastructure:
-          context: uda-context
           requires: [deploy-infrastructure]
       - run-migrations:
           requires: [configure-infrastructure]
       - deploy-frontend:
           requires: [run-migrations]
-          context: uda-context
       - deploy-backend:
-          context: uda-context
           requires: [deploy-frontend]
       - smoke-test:
-          context: uda-context
           requires: [deploy-backend]
           
