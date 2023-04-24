@@ -25,7 +25,7 @@
   become: true
   become_method: sudo
   become_user: root
-  command: pm2 delete all && pm2 start npm --name "backend" -- run start
+  command: pm2 start npm --name "backend" -- run start
   args:
     chdir: /home/ubuntu/backend
 
