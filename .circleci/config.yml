@@ -54,13 +54,9 @@ commands:
           name: Revert migrations
           when: on_fail
           command: |
-                    SUCCESS=$(curl -s https://kvdb.io/UqhCHcGgnu4wRR5PvQRuN2/migration_${CIRCLE_WORKFLOW_ID:0:7})
-                    if (( $SUCCESS=="success" ));
-                      then
-                        cd ~/UDAPEOPLE/backend
-                        npm install
-                        npm run migrations:revert
-                    fi
+                    cd ~/UDAPEOPLE/backend
+                    npm install
+                    npm run migrations:revert
 
 
 jobs:
@@ -366,6 +362,63 @@ jobs:
           workflow_id: ${CIRCLE_WORKFLOW_ID:0:7}
       - destroy_environment:
           workflow_id: ${CIRCLE_WORKFLOW_ID:0:7}    
+  
+  cloudfront-update:
+    working_directory: ~/UDAPEOPLE/.circleci
+    docker:
+      - image: amazon/aws-cli
+    steps:
+      - checkout:
+          path: ~/UDAPEOPLE
+      - run:
+          name: Get Previous workflow ID
+          command: |
+                    export PrevWorkflowID=$(aws cloudformation list-exports \
+                    --query "Exports[?Name='WorkflowID'].Value" \
+                    --output text)
+
+                    echo $PrevWorkflowID >> prevworkflow.txt
+                    ls
+      - run:
+          name: Change origin of CDN
+          command: |
+                    echo $PrevWorkflowID
+                    aws cloudformation deploy \
+                    -- template-file files/cloudfront.yml \
+                    --stack-name "InitialStack" \
+                    --parameter-overrides WorkflowID="${CIRCLE_WORKFLOW_ID:0:7}" \
+                    --tags project=udapeople
+      - persist_to_workspace:
+          root: .
+          path: prevworkflow.txt
+  
+  cleanup:
+    docker:
+      - image: amazon/aws-cli
+    steps:
+      - attach_workspace:
+          at: .
+      - run: echo $PrevWorkflowID
+      - run: echo $CIRCLE_WORKFLOW_ID
+      - run: |
+              export STACKS=$(aws cloudformation list-stacks \
+              --query "StackSUmmaries[*].StackName" \
+              --stack-status-filter CREATE_COMPLETE \
+              --output text)
+              echo $STACKS
+              echo Stack names: ${STACKS[@]}
+      - run:
+          name: Delete old stack
+          command: |
+                    OldWorkflowID=$(cat prevworkflow.txt)
+                    cat $OldWorkflowID
+                    if [[ ${CIRCLE_WORFLOW_ID:0:7} != $OldWorkflowID]]
+                    then
+                      aws s3 rm S3://udapeople-${OldWorkflowID} --recursive
+                      aws cloudformation delete-stack --stack-name udapeople-backend-${OldWorkflowID}
+                      aws cloudformation delete-stack --stack-name udapeople-frontend-${OldWorkflowID}
+
+          
 
 
 workflows:
@@ -394,4 +447,8 @@ workflows:
           requires: [deploy-frontend]
       - smoke-test:
           requires: [deploy-backend]
+      - cloudfront-update:
+          requires: [smoke-test]
+      - cleanup:
+          requires: [cloudfront-update]
           
