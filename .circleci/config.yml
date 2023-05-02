@@ -375,8 +375,6 @@ jobs:
           command: |
                     apk update
                     apk add tar curl nodejs npm python3 aws-cli
-      - attach_workspace:
-          at: .
       - run:
           name: Get Previous workflow ID
           command: |
@@ -397,7 +395,7 @@ jobs:
                     --tags project=udapeople
       - persist_to_workspace:
           root: .
-          path: prevworkflow.txt
+          paths: prevworkflow.txt
   
   cleanup:
     working_directory: ~/UDAPEOPLE/.circleci
