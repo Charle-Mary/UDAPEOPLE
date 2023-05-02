@@ -374,7 +374,7 @@ jobs:
           name: Get Previous workflow ID
           command: |
                     export PrevWorkflowID=$(aws cloudformation list-exports \
-                    --query "Exports[?Name='WorkflowID'].Value" \
+                    --query "Exports[?Name=='WorkflowID'].Value" \
                     --output text)
 
                     echo $PrevWorkflowID >> prevworkflow.txt
