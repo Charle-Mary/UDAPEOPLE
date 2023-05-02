@@ -417,7 +417,7 @@ jobs:
               export STACKS=$(aws cloudformation list-stacks \
               --query "StackSummaries[*].StackName" \
               --stack-status-filter CREATE_COMPLETE \
-              --output text))
+              --output text)
               echo $STACKS
               echo Stack names: ${STACKS[@]}
       - run:
