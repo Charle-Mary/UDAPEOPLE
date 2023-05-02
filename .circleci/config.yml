@@ -366,10 +366,17 @@ jobs:
   cloudfront-update:
     working_directory: ~/UDAPEOPLE/.circleci
     docker:
-      - image: amazon/aws-cli
+      - image: alpine
     steps:
       - checkout:
           path: ~/UDAPEOPLE
+      - run:
+          name: Install dependencies
+          command: |
+                    apk update
+                    apk add tar curl nodejs npm python3 aws-cli
+      - attach_workspace:
+          at: .
       - run:
           name: Get Previous workflow ID
           command: |
@@ -393,9 +400,17 @@ jobs:
           path: prevworkflow.txt
   
   cleanup:
+    working_directory: ~/UDAPEOPLE/.circleci
     docker:
-      - image: amazon/aws-cli
+      - image: alpine
     steps:
+      - checkout:
+          path: ~/UDAPEOPLE
+      - run:
+          name: Install dependencies
+          command: |
+                    apk update
+                    apk add tar curl nodejs npm python3 aws-cli
       - attach_workspace:
           at: .
       - run: echo $PrevWorkflowID
@@ -417,6 +432,8 @@ jobs:
                       aws s3 rm S3://udapeople-${OldWorkflowID} --recursive
                       aws cloudformation delete-stack --stack-name udapeople-backend-${OldWorkflowID}
                       aws cloudformation delete-stack --stack-name udapeople-frontend-${OldWorkflowID}
+                    else
+                      echo NO old stack available
 
           
 
