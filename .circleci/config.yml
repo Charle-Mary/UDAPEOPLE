@@ -423,6 +423,7 @@ jobs:
       - run:
           name: Delete old stack
           command: |
+          
                     OldWorkflowID=cat prevworkflow.txt
                     cat $OldWorkflowID
                     if [[ ${CIRCLE_WORFLOW_ID:0:7} != $OldWorkflowID]]
