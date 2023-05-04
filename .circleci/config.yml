@@ -160,7 +160,7 @@ jobs:
           name:  Get hostname of servers
           command: |
                     aws ec2 describe-instances --filters \
-                    Name=tag:project,Values=udapeople --query \
+                    Name=tag:Name,Values=backend-${CIRCLE_WORKFLOW_ID:0:7} --query \
                     Reservations[*].Instances[*].PublicDnsName --output \
                     text >> ansible/inventory.txt    
       - run: yum install -y tar gzip    
@@ -388,7 +388,6 @@ jobs:
       - run:
           name: Change origin of CDN
           command: |
-                    echo $PrevWorkflowID
                     aws cloudformation deploy \
                     --template-file files/cloudfront.yml \
                     --stack-name "InitialStack" \
@@ -405,6 +404,7 @@ jobs:
     steps:
       - checkout:
           path: ~/UDAPEOPLE
+      - run: ls
       - run:
           name: Install dependencies
           command: |
@@ -412,7 +412,7 @@ jobs:
                     apk add tar curl nodejs npm python3 aws-cli
       - attach_workspace:
           at: .
-      - run: echo $PrevWorkflowID
+      - run: ls
       - run: echo $CIRCLE_WORKFLOW_ID
       - run: |
               export STACKS=$(aws cloudformation list-stacks \
@@ -423,9 +423,9 @@ jobs:
       - run:
           name: Delete old stack
           command: |
-          
-                    OldWorkflowID=cat prevworkflow.txt
-                    cat $OldWorkflowID
+
+                    OldWorkflowID=$(<prevworkflow.txt)
+                    echo $OldWorkflowID
                     if [[ ${CIRCLE_WORFLOW_ID:0:7} != $OldWorkflowID]]
                     then
                       aws s3 rm S3://udapeople-${OldWorkflowID} --recursive
