@@ -420,7 +420,6 @@ jobs:
               --stack-status-filter CREATE_COMPLETE \
               --output text)
               echo $STACKS
-              echo Stack names: "${STACKS[@]}"
       - run:
           name: Delete old stack
           command: |
