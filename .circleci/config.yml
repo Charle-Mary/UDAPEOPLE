@@ -426,6 +426,7 @@ jobs:
 
                     OldWorkflowID=$(<prevworkflow.txt)
                     echo $OldWorkflowID
+                    cat prevworkflow.txt
                     # if [[ ${CIRCLE_WORFLOW_ID:0:7} != $OldWorkflowID]]
                     # then
                     #   aws s3 rm s3://udapeople-${OldWorkflowID} --recursive
