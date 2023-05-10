@@ -427,7 +427,7 @@ workflows:
   uda_people_build:
     when:
       matches:
-        pattern: "^dev*"
+        pattern: "^dev.*"
         value: << pipeline.git.branch >>
     jobs:
       - build-frontend
