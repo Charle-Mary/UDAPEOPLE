@@ -2,7 +2,6 @@ version: 2.1
 
 orbs:
   slack: circleci/slack@4.12.1
-  aws: circleci/aws-cli@3.1.5
 
 default_frontend: &frontend
   working_directory: ~/UDAPEOPLE/frontend 
@@ -378,6 +377,7 @@ jobs:
       - run:
           name: Change origin of CDN
           command: |
+
                     aws cloudformation deploy \
                     --template-file files/cloudfront.yml \
                     --stack-name "InitialStack" \
