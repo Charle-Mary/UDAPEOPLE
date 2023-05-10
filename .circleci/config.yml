@@ -189,7 +189,6 @@ jobs:
                   apt-get update -y
                   apt install ansible curl tar -y
                   pip install awscli
-      - run: cat inventory.txt
       - run:
           name: Configure backend server
           command: ansible-playbook -i inventory.txt configure-server.yml
@@ -215,7 +214,6 @@ jobs:
       - run:
           name: Migrate database to reflect changes
           command: npm run migrations > migrations_dump.txt
-      - run: cat migrations_dump.txt
       - run:
           name: Send migration status to a key value store
           command: |
@@ -251,8 +249,6 @@ jobs:
       - run:
           name: Setup frontend environmental variable
           command: |
-                    ls
-                    cat inventory.txt
                     export BACKEND_IP=$(cat inventory.txt | grep 'amazonaws')
                     export API_URL="http://${BACKEND_IP}:3030"
                     echo API_URL=${API_URL} >> .env
@@ -286,8 +282,6 @@ jobs:
       - run:
           name: Install dependencies
           command: |
-                  ls
-                  cat inventory.txt
                   apt-get update -y
                   apt install tar ansible gzip unzip nodejs npm curl -y
                   pip install awscli
@@ -295,15 +289,13 @@ jobs:
           name: Build artifact files
           command: |
                     cd ../../backend
-                    printenv | grep TYPEORM >> .env 
-                    cat .env
+                    printenv | grep TYPEORM >> .env
                     npm install
                     npm run build
       - run: 
           name: Extract artifact to backend servers
           command: |
                     cd ../../
-                    ls
                     tar -C backend -zcvf artifact.tar.gz .
       - run:
           name: Deploy backend artifacts
@@ -383,8 +375,6 @@ jobs:
                     --output text)
 
                     echo $PrevWorkflowID >> prevworkflow.txt
-                    ls
-                    cat prevworkflow.txt
       - run:
           name: Change origin of CDN
           command: |
@@ -404,7 +394,6 @@ jobs:
     steps:
       - checkout:
           path: ~/UDAPEOPLE
-      - run: ls
       - run:
           name: Install dependencies
           command: |
@@ -412,8 +401,6 @@ jobs:
                     apk add tar curl nodejs npm python3 aws-cli
       - attach_workspace:
           at: .
-      - run: ls
-      - run: echo $CIRCLE_WORKFLOW_ID
       - run: |
               export STACKS=$(aws cloudformation list-stacks \
               --query "StackSummaries[*].StackName" \
@@ -425,13 +412,14 @@ jobs:
           command: |
 
                     export OldWorkflowID=`cat prevworkflow.txt`
-                    echo $OldWorkflowID
-                    echo ${CIRCLE_WORKFLOW_ID:0:7}
                     if [[ "${CIRCLE_WORFLOW_ID:0:7}" != "$OldWorkflowID" && "$OldWorkflowID" != "" ]]; then
+                      echo "I got into first block"
                       aws s3 rm s3://udapeople-${OldWorkflowID} --recursive
                       aws cloudformation delete-stack --stack-name udapeople-backend-${OldWorkflowID}
                       aws cloudformation delete-stack --stack-name udapeople-frontend-${OldWorkflowID}
+                      echo "I'm done with first block"
                     else
+                      echo "I got into second block"
                       echo No old stack available
                     fi
 
