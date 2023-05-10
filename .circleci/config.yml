@@ -390,7 +390,7 @@ jobs:
           command: |
                     aws cloudformation deploy \
                     --template-file files/cloudfront.yml \
-                    --stack-name "initialstack" \
+                    --stack-name "InitialStack" \
                     --parameter-overrides WorkflowID="${CIRCLE_WORKFLOW_ID:0:7}" \
                     --tags project=udapeople
       - persist_to_workspace:
@@ -424,15 +424,15 @@ jobs:
           name: Delete old stack
           command: |
 
-                    OldWorkflowID=`cat prevworkflow.txt`
+                    export OldWorkflowID=`cat prevworkflow.txt`
                     echo $OldWorkflowID
-                    if [[ "${CIRCLE_WORFLOW_ID:0:7}"!="${OldWorkflowID} ]]
-                    then
+                    echo $CIRCLE_WORKFLOW_ID:0:7
+                    if [ "$CIRCLE_WORFLOW_ID:0:7" != "$OldWorkflowID" ]; then
                       aws s3 rm s3://udapeople-${OldWorkflowID} --recursive
                       aws cloudformation delete-stack --stack-name udapeople-backend-${OldWorkflowID}
                       aws cloudformation delete-stack --stack-name udapeople-frontend-${OldWorkflowID}
                     else
-                      echo NO old stack available
+                      echo No old stack available
                     fi
 
           
