@@ -425,10 +425,10 @@ jobs:
 
 workflows:
   uda_people_build:
-    filters:
-      branches:
-        only:
-          - dev
+    when:
+      matches:
+        pattern: "^dev*"
+        value: << pipeline.git.branch >>
     jobs:
       - build-frontend
       - build-backend
@@ -442,11 +442,10 @@ workflows:
           requires: [build-backend]
   
   deploy_and_configure:
-    filters:
-      branches:
-        only:
-          - master
-          - main
+    when:
+      matches:
+        pattern: "^master$"
+        value: << pipeline.git.branch >>
     jobs:
       - deploy-infrastructure
       - configure-infrastructure:
